@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+:root {
+  --paper: #f7f5f0;
+  --ink: #1c1b19;
+  --accent: #1f4d44;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer base {
+  /* premium, airy headings */
+  h1,
+  h2 {
+    letter-spacing: -0.02em;
+  }
+  .eyebrow {
+    letter-spacing: 0.18em;
+  }
+}
+
+@layer utilities {
+  .gradient-text {
+    background: linear-gradient(135deg, #1f4d44 0%, #2f6b5e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* ---- React Flow, light theme ---- */
+.react-flow__attribution {
+  display: none;
+}
+
+.react-flow__edge-path {
+  stroke: #c7c0b2;
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: #1f4d44;
+}
+
+.react-flow__handle {
+  background: #1f4d44;
+  border: none;
+  width: 8px;
+  height: 8px;
+}
+
+.react-flow__controls {
+  box-shadow: 0 1px 3px rgba(28, 27, 25, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.react-flow__controls-button {
+  background: #ffffff;
+  border-bottom: 1px solid #e4dfd4;
+  color: #1c1b19;
+  fill: #1c1b19;
+}
+
+.react-flow__controls-button:hover {
+  background: #f1eee7;
+}
+
+/* thin scrollbars for side panels */
+.thin-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: #e4dfd4;
+  border-radius: 4px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
