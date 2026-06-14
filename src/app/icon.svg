@@ -1,0 +1,22 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1f4d44"/>
+      <stop offset="1" stop-color="#2f6b5e"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#g)"/>
+  <!-- architecture graph: nodes connected by edges -->
+  <g stroke="#f7f5f0" stroke-width="2.5" stroke-linecap="round">
+    <line x1="20" y1="20" x2="20" y2="44"/>
+    <line x1="20" y1="20" x2="44" y2="20"/>
+    <line x1="20" y1="44" x2="44" y2="44"/>
+    <line x1="44" y1="20" x2="44" y2="44"/>
+  </g>
+  <g fill="#f7f5f0">
+    <circle cx="20" cy="20" r="6"/>
+    <circle cx="44" cy="20" r="6"/>
+    <circle cx="20" cy="44" r="6"/>
+    <circle cx="44" cy="44" r="6"/>
+  </g>
+</svg>

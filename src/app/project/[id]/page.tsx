@@ -35,6 +35,7 @@ import { ReviewPanel } from "@/components/review/ReviewPanel";
 import { TradeoffPanel } from "@/components/tradeoffs/TradeoffPanel";
 import { DecisionList } from "@/components/decisions/DecisionList";
 import { ExportDialog } from "@/components/export/ExportDialog";
+import { HelpButton, CanvasGuide } from "@/components/Guidance";
 import { Chip } from "@/components/ui/primitives";
 
 type Tab = "canvas" | "brief" | "review" | "tradeoffs" | "decisions" | "export";
@@ -215,7 +216,7 @@ export default function ProjectPage({
         {tab === "canvas" && (
           <div className="flex h-full">
             <Palette />
-            <div className="min-w-0 flex-1">
+            <div className="relative min-w-0 flex-1">
               <Canvas
                 nodes={nodes}
                 edges={edges}
@@ -225,6 +226,9 @@ export default function ProjectPage({
                 onAddNode={onAddNode}
                 onSelectNode={setSelectedNodeId}
               />
+              {nodes.length === 0 && (
+                <CanvasGuide onGoToBrief={() => setTab("brief")} />
+              )}
             </div>
             <Inspector
               node={selectedNode}
@@ -264,6 +268,8 @@ export default function ProjectPage({
           </TabScroll>
         )}
       </div>
+
+      <HelpButton />
     </main>
   );
 }
