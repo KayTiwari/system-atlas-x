@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Trash2, X, Plus, Lightbulb, Repeat } from "lucide-react";
+import { Trash2, X, Plus, Lightbulb, Repeat, Check } from "lucide-react";
 import { CATALOG } from "@/lib/catalog";
 import { optionsForCategory } from "@/lib/tradeoffs";
 import type {
@@ -55,6 +55,90 @@ function TextField({
         />
       )}
     </label>
+  );
+}
+
+/**
+ * Technology input with typeahead from the Tradeoff Engine catalog. Free text is
+ * still allowed, but typing something that matches a known option lets you apply
+ * the canonical name (and retype the node, e.g. relational <-> non-relational),
+ * keeping the field in sync with the Swap picker and comparison matrix.
+ */
+function TechnologyField({
+  category,
+  value,
+  placeholder,
+  onChange,
+  onApplyOption,
+}: {
+  category?: DecisionCategory;
+  value: string;
+  placeholder?: string;
+  onChange: (v: string) => void;
+  onApplyOption: (patch: Partial<ArchitectureNodeData>) => void;
+}) {
+  const [focused, setFocused] = useState(false);
+  const options = category ? optionsForCategory(category) : [];
+  const norm = value.trim().toLowerCase();
+  const exact = options.find((o) => o.name.toLowerCase() === norm);
+  const matches = options.filter((o) => o.name.toLowerCase().includes(norm));
+  const showList = focused && options.length > 0 && !exact && matches.length > 0;
+
+  function apply(option: (typeof options)[number]) {
+    onApplyOption({
+      technology: option.name,
+      ...(option.nodeType ? { architectureType: option.nodeType } : {}),
+    });
+  }
+
+  const cls =
+    "w-full rounded-lg border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-brand-blue";
+
+  return (
+    <div className="relative">
+      <span className="mb-1 flex items-center gap-1.5 text-xs font-medium text-slate-500">
+        Technology
+        {exact && (
+          <span className="inline-flex items-center gap-0.5 text-brand-cyan">
+            <Check className="h-3 w-3" /> in catalog
+          </span>
+        )}
+      </span>
+      <input
+        value={value}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => {
+          setFocused(false);
+          // Snap a free-typed value to the catalog's canonical casing when it
+          // matches, so the node and the Swap picker agree.
+          const m = options.find((o) => o.name.toLowerCase() === norm);
+          if (m && m.name !== value.trim()) apply(m);
+        }}
+        className={cls}
+      />
+      {showList && (
+        <ul className="absolute z-10 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border border-navy-700 bg-navy-900 py-1 shadow-xl thin-scroll">
+          {matches.map((o) => (
+            <li key={o.id}>
+              <button
+                type="button"
+                // Keep focus on the input so the click registers before blur.
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => apply(o)}
+                className="block w-full px-3 py-1.5 text-left hover:bg-navy-800"
+              >
+                <span className="text-sm text-slate-800">{o.name}</span>
+                <span className="block truncate text-xs text-slate-500">
+                  {o.chooseWhen}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 
@@ -163,11 +247,12 @@ export function Inspector({ node, onChange, onDelete }: InspectorProps) {
           value={d.name}
           onChange={(v) => onChange({ name: v })}
         />
-        <TextField
-          label="Technology"
+        <TechnologyField
+          category={entry.decisionCategory}
           value={d.technology ?? ""}
           placeholder={entry.defaultTechnology ?? "e.g. Postgres on RDS"}
           onChange={(v) => onChange({ technology: v })}
+          onApplyOption={(patch) => onChange(patch)}
         />
         <TextField
           label="Purpose / description"

@@ -16,6 +16,7 @@ import {
   Scale,
   FileText,
   Download,
+  Sparkles,
 } from "lucide-react";
 import { useAtlasStore, useHasHydrated } from "@/lib/store";
 import { defaultNodeData } from "@/lib/catalog";
@@ -35,16 +36,25 @@ import { ReviewPanel } from "@/components/review/ReviewPanel";
 import { TradeoffPanel } from "@/components/tradeoffs/TradeoffPanel";
 import { DecisionList } from "@/components/decisions/DecisionList";
 import { ExportDialog } from "@/components/export/ExportDialog";
+import { AssistPanel } from "@/components/ai/AssistPanel";
 import { HelpButton, CanvasGuide } from "@/components/Guidance";
 import { Chip } from "@/components/ui/primitives";
 
-type Tab = "canvas" | "brief" | "review" | "tradeoffs" | "decisions" | "export";
+type Tab =
+  | "canvas"
+  | "brief"
+  | "review"
+  | "tradeoffs"
+  | "assist"
+  | "decisions"
+  | "export";
 
 const TABS: { id: Tab; label: string; icon: typeof Network }[] = [
   { id: "canvas", label: "Canvas", icon: Network },
   { id: "brief", label: "Brief", icon: ClipboardList },
   { id: "review", label: "Review", icon: ShieldAlert },
   { id: "tradeoffs", label: "Tradeoffs", icon: Scale },
+  { id: "assist", label: "Assist", icon: Sparkles },
   { id: "decisions", label: "Decisions", icon: FileText },
   { id: "export", label: "Export", icon: Download },
 ];
@@ -253,6 +263,12 @@ export default function ProjectPage({
         {tab === "tradeoffs" && (
           <TabScroll>
             <TradeoffPanel projectId={id} nodes={nodes} />
+          </TabScroll>
+        )}
+
+        {tab === "assist" && (
+          <TabScroll>
+            <AssistPanel project={{ ...project, nodes, edges }} />
           </TabScroll>
         )}
 

@@ -103,6 +103,35 @@ export type ReviewFinding = {
   recommendation: string;
 };
 
+/**
+ * A recommendation that lives ON the project (persisted), as opposed to the
+ * linter's rule findings which are recomputed live. Sourced either from the
+ * user (hand-authored note) or the AI assistant. An optional `category` lets a
+ * suggestion surface next to the matching Tradeoff Engine recommendation.
+ */
+export type SuggestionSource = "ai" | "user";
+export type Suggestion = {
+  id: string;
+  source: SuggestionSource;
+  severity: ReviewSeverity;
+  title: string;
+  description: string;
+  recommendation: string;
+  category?: DecisionCategory;
+  createdAt: string;
+};
+
+/**
+ * A wireframe / sketch the user uploads as the source of truth for their
+ * design. Stored as a downscaled data URL so it round-trips through
+ * localStorage and JSON export without a backend.
+ */
+export type ReferenceImage = {
+  dataUrl: string;
+  name: string;
+  addedAt: string;
+};
+
 export type DecisionStatus = "proposed" | "accepted" | "rejected" | "deprecated";
 export type Decision = {
   id: string;
@@ -144,6 +173,8 @@ export type Project = {
   nodes: ArchitectureFlowNode[];
   edges: ArchitectureFlowEdge[];
   decisions: Decision[];
+  suggestions: Suggestion[];
+  referenceImage?: ReferenceImage | null;
 };
 
 export function emptyBrief(): ArchitectureBrief {

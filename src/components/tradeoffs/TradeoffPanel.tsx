@@ -1,13 +1,33 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Scale, FilePlus2, ChevronDown, Check } from "lucide-react";
+import { Scale, FilePlus2, ChevronDown, Check, Sparkles } from "lucide-react";
 import { useAtlasStore } from "@/lib/store";
 import { recommend, recommendationToDecision } from "@/lib/decisionRules";
-import type { ArchitectureFlowNode, DecisionRecommendation } from "@/lib/types";
+import type {
+  ArchitectureFlowNode,
+  DecisionCategory,
+  DecisionRecommendation,
+  Suggestion,
+} from "@/lib/types";
 import { Button, Panel } from "@/components/ui/primitives";
 import { ComparisonMatrix } from "./ComparisonMatrix";
 import { RuleOfThumbCard } from "./RuleOfThumbCard";
+
+function AiSuggestionRow({ s }: { s: Suggestion }) {
+  return (
+    <div className="rounded-lg border border-brand-cyan/20 bg-brand-cyan/5 p-3">
+      <p className="flex items-center gap-1.5 text-sm font-medium text-slate-800">
+        <Sparkles className="h-3.5 w-3.5 text-brand-cyan" /> {s.title}
+      </p>
+      {s.recommendation && (
+        <p className="mt-1 whitespace-pre-wrap text-sm text-slate-600">
+          {s.recommendation}
+        </p>
+      )}
+    </div>
+  );
+}
 
 const CONFIDENCE_COLOR: Record<DecisionRecommendation["confidence"], string> = {
   high: "text-emerald-400",
@@ -25,6 +45,9 @@ export function TradeoffPanel({
   const brief = useAtlasStore(
     (s) => s.projects.find((p) => p.id === projectId)?.brief
   );
+  const suggestions = useAtlasStore(
+    (s) => s.projects.find((p) => p.id === projectId)?.suggestions ?? []
+  );
   const addDecision = useAtlasStore((s) => s.addDecision);
   const [addedFor, setAddedFor] = useState<Record<string, boolean>>({});
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
@@ -34,7 +57,25 @@ export function TradeoffPanel({
     [brief, nodes]
   );
 
+  // AI suggestions tagged with a decision category, grouped so they sit next to
+  // the matching tradeoff recommendation.
+  const aiByCategory = useMemo(() => {
+    const map = new Map<DecisionCategory, Suggestion[]>();
+    for (const s of suggestions) {
+      if (s.source !== "ai" || !s.category) continue;
+      const list = map.get(s.category) ?? [];
+      list.push(s);
+      map.set(s.category, list);
+    }
+    return map;
+  }, [suggestions]);
+
   if (!brief) return null;
+
+  const coveredCategories = new Set(recommendations.map((r) => r.category));
+  const orphanAi = [...aiByCategory.entries()].filter(
+    ([cat]) => !coveredCategories.has(cat)
+  );
 
   return (
     <div className="space-y-6">
@@ -114,6 +155,14 @@ export function TradeoffPanel({
                 {open ? "Hide comparison" : "Compare options"}
               </button>
 
+              {(aiByCategory.get(rec.category)?.length ?? 0) > 0 && (
+                <div className="mt-3 space-y-2">
+                  {aiByCategory.get(rec.category)!.map((s) => (
+                    <AiSuggestionRow key={s.id} s={s} />
+                  ))}
+                </div>
+              )}
+
               {open && (
                 <div className="mt-3 space-y-3">
                   <RuleOfThumbCard category={rec.category} />
@@ -123,6 +172,25 @@ export function TradeoffPanel({
             </Panel>
           );
         })}
+
+        {orphanAi.length > 0 && (
+          <Panel className="space-y-3 p-5">
+            <h3 className="flex items-center gap-1.5 text-lg font-semibold">
+              <Sparkles className="h-4 w-4 text-brand-cyan" /> Other AI
+              suggestions
+            </h3>
+            {orphanAi.map(([cat, list]) => (
+              <div key={cat} className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  {cat}
+                </p>
+                {list.map((s) => (
+                  <AiSuggestionRow key={s.id} s={s} />
+                ))}
+              </div>
+            ))}
+          </Panel>
+        )}
       </div>
     </div>
   );

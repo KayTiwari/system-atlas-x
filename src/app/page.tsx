@@ -9,6 +9,9 @@ import {
   Trash2,
   ArrowRight,
   Boxes,
+  Sparkles,
+  KeyRound,
+  ExternalLink,
 } from "lucide-react";
 import { useAtlasStore, useHasHydrated } from "@/lib/store";
 import { TEMPLATES, TEMPLATE_GROUPS } from "@/lib/templates";
@@ -21,9 +24,11 @@ export default function DashboardPage() {
   const createProject = useAtlasStore((s) => s.createProject);
   const importProject = useAtlasStore((s) => s.importProject);
   const deleteProject = useAtlasStore((s) => s.deleteProject);
+  const geminiApiKey = useAtlasStore((s) => s.geminiApiKey);
 
   const [showTemplates, setShowTemplates] = useState(false);
   const [naming, setNaming] = useState(false);
+  const [showKey, setShowKey] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -74,6 +79,10 @@ export default function DashboardPage() {
               onClick={() => fileInputRef.current?.click()}
             >
               <Upload className="h-4 w-4" /> Import JSON
+            </Button>
+            <Button variant="secondary" onClick={() => setShowKey(true)}>
+              <Sparkles className="h-4 w-4" />
+              {geminiApiKey ? "AI connected" : "Connect AI"}
             </Button>
             <input
               ref={fileInputRef}
@@ -228,7 +237,93 @@ export default function DashboardPage() {
           }}
         />
       )}
+
+      {showKey && <GeminiKeyModal onClose={() => setShowKey(false)} />}
     </main>
+  );
+}
+
+const KEY_URL = "https://aistudio.google.com/app/apikey";
+
+function GeminiKeyModal({ onClose }: { onClose: () => void }) {
+  const geminiApiKey = useAtlasStore((s) => s.geminiApiKey);
+  const setGeminiApiKey = useAtlasStore((s) => s.setGeminiApiKey);
+  const [draft, setDraft] = useState(geminiApiKey);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-6"
+      onClick={onClose}
+    >
+      <Panel className="w-full max-w-md bg-navy-900 p-6">
+        <div onClick={(e) => e.stopPropagation()}>
+          <div className="mb-1 flex items-center gap-2 text-brand-cyan">
+            <Sparkles className="h-5 w-5" />
+            <span className="text-sm font-semibold uppercase tracking-wide">
+              AI assistant
+            </span>
+          </div>
+          <h2 className="mb-2 text-xl font-bold">Connect a free Gemini key</h2>
+          <p className="mb-4 text-sm text-slate-500">
+            The assistant runs on Google Gemini using your own free API key,
+            stored only in this browser and called directly - no backend, no
+            secrets on a server we run.
+          </p>
+          <a
+            href={KEY_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="mb-4 inline-flex items-center gap-1.5 text-sm text-brand-cyan hover:underline"
+          >
+            <KeyRound className="h-4 w-4" /> Get a free Gemini key{" "}
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+          <input
+            autoFocus
+            type="password"
+            value={draft}
+            placeholder="Paste your Gemini API key"
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setGeminiApiKey(draft.trim());
+                onClose();
+              }
+              if (e.key === "Escape") onClose();
+            }}
+            className="w-full rounded-lg border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none focus:border-brand-blue"
+          />
+          <div className="mt-5 flex items-center justify-between gap-2">
+            {geminiApiKey ? (
+              <button
+                onClick={() => {
+                  setGeminiApiKey("");
+                  setDraft("");
+                }}
+                className="text-xs text-slate-500 hover:text-red-500"
+              >
+                Disconnect
+              </button>
+            ) : (
+              <span />
+            )}
+            <div className="flex gap-2">
+              <Button variant="ghost" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  setGeminiApiKey(draft.trim());
+                  onClose();
+                }}
+              >
+                Save key
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Panel>
+    </div>
   );
 }
 
