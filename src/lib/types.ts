@@ -8,6 +8,9 @@ import type { Node, Edge } from "@xyflow/react";
  */
 export type ArchitectureNodeType =
   | "web_app"
+  | "mobile_app"
+  | "static_site"
+  | "bff"
   | "api_gateway"
   | "api_service"
   | "rate_limiter"
@@ -59,6 +62,7 @@ export type ArchitectureFlowEdge = Edge<ArchitectureEdgeData>;
 
 /** Decision categories the Tradeoff Engine reasons about. */
 export type DecisionCategory =
+  | "frontend"
   | "database"
   | "sqlDatabase"
   | "noSqlDatabase"

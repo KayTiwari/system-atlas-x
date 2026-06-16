@@ -7,8 +7,11 @@ import {
   Cpu,
   GitBranch,
   Database,
+  FileCode2,
   FileSearch,
   Globe,
+  Smartphone,
+  Split,
   HardDrive,
   KeyRound,
   Layers,
@@ -28,6 +31,7 @@ import type { ArchitectureNodeType, DecisionCategory } from "./types";
 
 /** Display groups, mirroring the system-design-primer categories. */
 export type PaletteGroup =
+  | "Client"
   | "Compute"
   | "Networking"
   | "Data"
@@ -56,17 +60,66 @@ export type CatalogEntry = {
 export const CATALOG: Record<ArchitectureNodeType, CatalogEntry> = {
   web_app: {
     type: "web_app",
-    label: "Web / Mobile App",
-    group: "Compute",
+    label: "Web App",
+    group: "Client",
     icon: Globe,
     accent: "text-sky-400",
-    purpose: "The client experience users interact with.",
-    whenToUse: ["Any user-facing product", "Browser or mobile front end"],
+    decisionCategory: "frontend",
+    defaultTechnology: "Next.js",
+    purpose: "The browser client users interact with.",
+    whenToUse: ["Any user-facing web product", "Dashboards, storefronts, SaaS UIs"],
     tradeoffs: [
-      "Rendering strategy (SSR/CSR/SSG) affects latency and SEO",
+      "Rendering strategy (SSR/CSR/SSG/ISR) trades SEO and TTFB against complexity",
       "State and auth must be handled carefully on the client",
     ],
     commonPatterns: ["Talks to an API gateway or backend API, never the DB directly"],
+  },
+  mobile_app: {
+    type: "mobile_app",
+    label: "Mobile App",
+    group: "Client",
+    icon: Smartphone,
+    accent: "text-sky-400",
+    defaultTechnology: "React Native",
+    purpose: "A native or cross-platform app on phones and tablets.",
+    whenToUse: ["Push notifications, offline use, device APIs", "App-store presence"],
+    tradeoffs: [
+      "Cross-platform (React Native/Flutter) trades native polish for shared code",
+      "Release cycles are gated by app-store review",
+    ],
+    commonPatterns: ["Calls the same backend API as the web client, often via a BFF"],
+  },
+  static_site: {
+    type: "static_site",
+    label: "Static Site / SSG",
+    group: "Client",
+    icon: FileCode2,
+    accent: "text-cyan-400",
+    decisionCategory: "frontend",
+    defaultTechnology: "Astro",
+    purpose: "Pre-rendered pages served from a CDN, optionally hydrated.",
+    whenToUse: ["Marketing sites, docs, blogs", "Content-heavy, read-mostly pages"],
+    tradeoffs: [
+      "Fastest TTFB and cheapest hosting; rebuilds on content change",
+      "Dynamic, per-user content needs client fetches or edge functions",
+    ],
+    commonPatterns: ["Built in CI and pushed to a CDN; APIs called from the edge/client"],
+  },
+  bff: {
+    type: "bff",
+    label: "Backend for Frontend",
+    group: "Client",
+    icon: Split,
+    accent: "text-emerald-400",
+    decisionCategory: "compute",
+    defaultTechnology: "Node.js",
+    purpose: "A thin API tailored to one client, aggregating downstream services.",
+    whenToUse: ["Web and mobile need different payloads", "Hiding service sprawl from clients"],
+    tradeoffs: [
+      "Trims over-fetching and shapes responses per client",
+      "One more service to deploy; can drift into a second monolith",
+    ],
+    commonPatterns: ["Sits between the client and internal services; owns no database"],
   },
   api_gateway: {
     type: "api_gateway",
@@ -457,6 +510,7 @@ export const CATALOG: Record<ArchitectureNodeType, CatalogEntry> = {
 export const CATALOG_LIST: CatalogEntry[] = Object.values(CATALOG);
 
 export const PALETTE_GROUPS: PaletteGroup[] = [
+  "Client",
   "Compute",
   "Networking",
   "Data",

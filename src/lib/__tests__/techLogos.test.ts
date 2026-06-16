@@ -36,6 +36,43 @@ describe("getTechLogo", () => {
     expect(dynamo?.kind).toBe("img");
   });
 
+  it("matches whole tokens, not substrings (no false positives)", () => {
+    // "go" must not match the "go" inside "mongodb", and "google".
+    expect(getTechLogo("Go")?.title).toBe("Go");
+    expect(getTechLogo("MongoDB")?.title).toBe("MongoDB");
+    expect(getTechLogo("Google Cloud")?.title).toBe("Google Cloud");
+    // multi-word brands stay distinct
+    expect(getTechLogo("Google Cloud Storage")?.title).toBe("Google Cloud Storage");
+    expect(getTechLogo("Ruby on Rails")?.title).toBe("Ruby on Rails");
+    expect(getTechLogo("Next.js (SSR)")?.title).toBe("Next.js");
+  });
+
+  it("resolves the new frontend and deepened tradeoff options to a logo", () => {
+    const expected: Record<string, string> = {
+      "Next.js": "Next.js",
+      "React SPA": "React",
+      SvelteKit: "Svelte",
+      Astro: "Astro",
+      Remix: "Remix",
+      Nuxt: "Nuxt",
+      CockroachDB: "Cockroach Labs",
+      Supabase: "Supabase",
+      Cassandra: "Apache Cassandra",
+      NATS: "NATS.io",
+      tRPC: "tRPC",
+      Algolia: "Algolia",
+      Meilisearch: "Meilisearch",
+      Milvus: "Milvus",
+      Clerk: "Clerk",
+      Keycloak: "Keycloak",
+      Sentry: "Sentry",
+      "React Native": "React",
+    };
+    for (const [tech, title] of Object.entries(expected)) {
+      expect(getTechLogo(tech)?.title, tech).toBe(title);
+    }
+  });
+
   it("returns null for generic, brand-less technologies", () => {
     for (const tech of [
       "REST",

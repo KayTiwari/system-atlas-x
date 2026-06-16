@@ -64,6 +64,86 @@ function s(
 }
 
 export const TECHNOLOGY_OPTIONS: TechnologyOption[] = [
+  // ---- Frontend / rendering strategy ----
+  {
+    id: "nextjs",
+    name: "Next.js",
+    category: "frontend",
+    scores: s(3, 5, 4, 4, 4, 5, 3, 4, 3),
+    bestFor: ["SSR/ISR with SEO", "Apps that mix static and dynamic pages"],
+    avoidWhen: ["A purely static brochure site", "You want zero framework overhead"],
+    chooseWhen: "You want SEO and a batteries-included React framework - and when in doubt.",
+    tradeoffs: [
+      "Server rendering plus a huge ecosystem and hiring pool.",
+      "More moving parts than a plain SPA; best on a Node or edge host.",
+    ],
+  },
+  {
+    id: "react-spa",
+    name: "React SPA",
+    category: "frontend",
+    scores: s(5, 4, 5, 3, 5, 5, 5, 3, 3),
+    bestFor: ["Highly interactive app behind a login", "Cheap static hosting"],
+    avoidWhen: ["SEO matters", "Slow first paint hurts conversion"],
+    chooseWhen: "The app lives behind auth and SEO does not matter.",
+    tradeoffs: [
+      "Dead simple to host as static files on a CDN.",
+      "Weak SEO and a slower first paint without server rendering.",
+    ],
+  },
+  {
+    id: "sveltekit",
+    name: "SvelteKit",
+    category: "frontend",
+    scores: s(4, 4, 4, 4, 4, 3, 4, 5, 3),
+    bestFor: ["Lean, fast UIs", "Less client JavaScript"],
+    avoidWhen: ["You need the largest ecosystem and hiring pool"],
+    chooseWhen: "You want top performance and a smaller bundle than React.",
+    tradeoffs: [
+      "Excellent performance and ergonomics.",
+      "Smaller ecosystem and talent pool than React.",
+    ],
+  },
+  {
+    id: "astro",
+    name: "Astro",
+    category: "frontend",
+    scores: s(4, 5, 5, 4, 5, 3, 4, 5, 3),
+    bestFor: ["Content sites, docs, blogs", "Mostly-static, read-heavy pages"],
+    avoidWhen: ["App-like, highly interactive dashboards"],
+    chooseWhen: "The site is content-first and ships little client JavaScript.",
+    tradeoffs: [
+      "Ships near-zero JS by default; very fast and cheap on a CDN.",
+      "Less suited to stateful, app-like interactivity.",
+    ],
+  },
+  {
+    id: "remix",
+    name: "Remix",
+    category: "frontend",
+    scores: s(3, 4, 4, 4, 4, 3, 4, 4, 3),
+    bestFor: ["Form-heavy apps", "Progressive enhancement and web standards"],
+    avoidWhen: ["A static site", "Your team is standardized on Next.js"],
+    chooseWhen: "You want server-rendered React built around web fundamentals.",
+    tradeoffs: [
+      "Great data loading and mutation story on web standards.",
+      "Smaller community than Next.js.",
+    ],
+  },
+  {
+    id: "nuxt",
+    name: "Nuxt",
+    category: "frontend",
+    scores: s(3, 4, 4, 4, 4, 4, 4, 4, 3),
+    bestFor: ["Vue teams wanting SSR/SSG"],
+    avoidWhen: ["The team is React-first"],
+    chooseWhen: "Your team prefers Vue and wants a Next.js-style framework.",
+    tradeoffs: [
+      "Next.js-class features for the Vue ecosystem.",
+      "Smaller ecosystem than React/Next.",
+    ],
+  },
+
   // ---- SQL database ----
   {
     id: "postgres",
@@ -342,7 +422,7 @@ export const TECHNOLOGY_OPTIONS: TechnologyOption[] = [
   },
   {
     id: "elasticsearch",
-    name: "Elasticsearch / OpenSearch",
+    name: "Elasticsearch",
     category: "search",
     scores: s(2, 5, 3, 3, 2, 3, 4, 5, 4),
     bestFor: ["Rich relevance", "Faceting", "Large-scale search"],
@@ -354,7 +434,7 @@ export const TECHNOLOGY_OPTIONS: TechnologyOption[] = [
   // ---- Auth ----
   {
     id: "managed-auth",
-    name: "Managed auth (Clerk/Auth0/Cognito)",
+    name: "Auth0",
     category: "auth",
     scores: s(5, 4, 3, 4, 5, 4, 2, 4, 5),
     bestFor: ["Fast, secure auth", "SSO/MFA out of the box"],
@@ -396,7 +476,7 @@ export const TECHNOLOGY_OPTIONS: TechnologyOption[] = [
   },
   {
     id: "qdrant",
-    name: "Qdrant / Weaviate",
+    name: "Qdrant",
     category: "vectorStore",
     scores: s(3, 5, 4, 4, 3, 3, 5, 5, 4),
     bestFor: ["Self-hosted vector search", "Filtering + ANN control"],
@@ -408,7 +488,7 @@ export const TECHNOLOGY_OPTIONS: TechnologyOption[] = [
   // ---- Observability ----
   {
     id: "datadog",
-    name: "Datadog / managed APM",
+    name: "Datadog",
     category: "observability",
     scores: s(5, 5, 2, 4, 5, 4, 2, 4, 4),
     bestFor: ["Fast setup", "Unified metrics/logs/traces"],
@@ -426,6 +506,121 @@ export const TECHNOLOGY_OPTIONS: TechnologyOption[] = [
     chooseWhen: "You want control and lower cost.",
     tradeoffs: ["Open-source, cheap.", "You run and tune the stack."],
   },
+  {
+    id: "sentry",
+    name: "Sentry",
+    category: "observability",
+    scores: s(5, 4, 4, 4, 5, 4, 3, 4, 3),
+    bestFor: ["Error and performance monitoring", "Frontend + backend tracing"],
+    avoidWhen: ["You need full infra metrics and logs in one tool"],
+    chooseWhen: "Catching and triaging application errors is the priority.",
+    tradeoffs: ["Excellent error tracking with rich context.", "Not a full metrics/logs platform."],
+  },
+
+  // ---- Additional popular options ----
+  {
+    id: "cockroachdb",
+    name: "CockroachDB",
+    category: "sqlDatabase",
+    nodeType: "sql_database",
+    scores: s(3, 5, 3, 5, 3, 3, 4, 4, 4),
+    bestFor: ["Global, horizontally scaled SQL", "Strong consistency at scale"],
+    avoidWhen: ["Small single-region apps where Postgres is simpler"],
+    chooseWhen: "You need Postgres-compatible SQL that scales writes across regions.",
+    tradeoffs: ["Distributed SQL with strong consistency.", "More ops and cost than a single Postgres."],
+  },
+  {
+    id: "supabase",
+    name: "Supabase",
+    category: "sqlDatabase",
+    nodeType: "sql_database",
+    scores: s(5, 3, 4, 5, 5, 4, 3, 4, 3),
+    bestFor: ["Fast Postgres-backed MVPs", "Auth, storage, and APIs in one"],
+    avoidWhen: ["You need fine-grained control over the database host"],
+    chooseWhen: "You want managed Postgres with batteries included and to move fast.",
+    tradeoffs: ["Postgres plus auth/storage/realtime out of the box.", "Some platform lock-in."],
+  },
+  {
+    id: "cassandra",
+    name: "Cassandra",
+    category: "noSqlDatabase",
+    nodeType: "nosql_database",
+    scores: s(2, 5, 4, 3, 2, 3, 5, 4, 4),
+    bestFor: ["Write-heavy, always-on workloads", "Multi-region, linear scale"],
+    avoidWhen: ["Ad-hoc queries", "Small datasets"],
+    chooseWhen: "You need massive write throughput and high availability.",
+    tradeoffs: ["Scales writes linearly with no single point of failure.", "Operationally heavy; model around queries."],
+  },
+  {
+    id: "nats",
+    name: "NATS",
+    category: "queue",
+    scores: s(4, 5, 5, 3, 4, 3, 5, 5, 3),
+    bestFor: ["Low-latency messaging", "Lightweight pub/sub and request-reply"],
+    avoidWhen: ["You need a managed queue with zero ops"],
+    chooseWhen: "You want a fast, lightweight messaging backbone you run yourself.",
+    tradeoffs: ["Tiny, fast, and simple to operate.", "Fewer turnkey integrations than SQS/Kafka."],
+  },
+  {
+    id: "trpc",
+    name: "tRPC",
+    category: "api",
+    scores: s(5, 3, 5, 4, 5, 3, 4, 4, 3),
+    bestFor: ["TypeScript monorepos", "End-to-end type safety without codegen"],
+    avoidWhen: ["Public APIs", "Non-TypeScript or polyglot clients"],
+    chooseWhen: "A single TypeScript team owns both client and server.",
+    tradeoffs: ["Type-safe client/server with no schema layer.", "TypeScript-only and not for public APIs."],
+  },
+  {
+    id: "algolia",
+    name: "Algolia",
+    category: "search",
+    scores: s(5, 4, 2, 4, 5, 4, 2, 5, 3),
+    bestFor: ["Instant search-as-you-type", "Hosted, low-ops search"],
+    avoidWhen: ["Tight budgets at high query volume", "Avoiding vendor lock-in"],
+    chooseWhen: "You want great search UX fast without running a cluster.",
+    tradeoffs: ["Turnkey, fast, great relevance tooling.", "Costly at scale and proprietary."],
+  },
+  {
+    id: "meilisearch",
+    name: "Meilisearch",
+    category: "search",
+    scores: s(5, 3, 5, 4, 4, 3, 5, 5, 3),
+    bestFor: ["Typo-tolerant search on a budget", "Self-hosted or small managed"],
+    avoidWhen: ["Petabyte-scale analytics-style search"],
+    chooseWhen: "You want fast, simple full-text search you can self-host cheaply.",
+    tradeoffs: ["Easy to run with great defaults.", "Less mature for very large or complex workloads."],
+  },
+  {
+    id: "milvus",
+    name: "Milvus",
+    category: "vectorStore",
+    scores: s(3, 5, 4, 3, 3, 3, 5, 4, 3),
+    bestFor: ["Billion-scale vector search", "Self-hosted vector workloads"],
+    avoidWhen: ["Small datasets where pgvector is enough"],
+    chooseWhen: "Vector volume is large enough to need a dedicated, scalable store.",
+    tradeoffs: ["Purpose-built and scales hard.", "Another system to run versus pgvector."],
+  },
+  {
+    id: "clerk",
+    name: "Clerk",
+    category: "auth",
+    scores: s(5, 4, 3, 4, 5, 3, 2, 4, 4),
+    bestFor: ["Drop-in auth UIs", "Fast launch with prebuilt components"],
+    avoidWhen: ["You need full control or want no auth vendor"],
+    chooseWhen: "You want polished auth and user management with minimal work.",
+    tradeoffs: ["Beautiful prebuilt flows and fast setup.", "Pricing and lock-in grow with users."],
+  },
+  {
+    id: "keycloak",
+    name: "Keycloak",
+    category: "auth",
+    scores: s(2, 4, 5, 4, 2, 3, 5, 4, 5),
+    bestFor: ["Self-hosted SSO/OIDC", "Enterprise identity, no per-user fees"],
+    avoidWhen: ["Small teams wanting zero ops"],
+    chooseWhen: "You need open-source identity you control, often for compliance.",
+    tradeoffs: ["Full-featured and free to run.", "You operate and upgrade it yourself."],
+  },
 ];
 
 export function optionsForCategory(category: DecisionCategory) {
@@ -437,6 +632,7 @@ export function optionById(id: string) {
 }
 
 export const CATEGORY_LABELS: Record<DecisionCategory, string> = {
+  frontend: "Frontend",
   database: "Database",
   sqlDatabase: "SQL database",
   noSqlDatabase: "NoSQL database",
@@ -457,6 +653,14 @@ export const RULES_OF_THUMB: Record<
   DecisionCategory,
   { use: string[]; avoid: string[] }
 > = {
+  frontend: {
+    use: [
+      "Use SSR/ISR (Next.js, Nuxt) when SEO and fast first paint matter.",
+      "Use SSG (Astro) for content-heavy, read-mostly pages.",
+      "A plain SPA is fine behind a login where SEO does not matter.",
+    ],
+    avoid: ["Don't pay for server rendering on a site that is purely static."],
+  },
   database: {
     use: [
       "Use Postgres when data has relationships, needs transactions, or you are unsure.",
