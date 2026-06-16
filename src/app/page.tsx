@@ -21,6 +21,7 @@ import {
 import { useAtlasStore, useHasHydrated } from "@/lib/store";
 import { BLUEPRINTS, BLUEPRINT_GROUPS } from "@/lib/blueprints";
 import { Button, Panel, Chip } from "@/components/ui/primitives";
+import { ExampleArchitecture } from "@/components/marketing/ExampleArchitecture";
 
 export default function DashboardPage() {
   const hydrated = useHasHydrated();
@@ -121,24 +122,34 @@ export default function DashboardPage() {
         {!hydrated ? (
           <p className="text-slate-500">Loading…</p>
         ) : projects.length === 0 ? (
-          <Panel className="p-10 sm:p-12">
-            <div className="mx-auto max-w-2xl text-center">
-              <div className="eyebrow mb-3 flex items-center justify-center gap-2 text-brand-cyan">
+          <Panel className="overflow-hidden">
+            {/* Lead with the output: a real generated architecture */}
+            <div className="border-b border-navy-700 p-6 sm:p-8">
+              <div className="eyebrow mb-3 flex items-center gap-2 text-brand-cyan">
                 <Sparkles className="h-4 w-4" />
                 <span className="text-xs font-semibold uppercase tracking-wide">
-                  New here
+                  Example output
                 </span>
               </div>
               <h2 className="text-2xl font-semibold tracking-tight">
-                Three steps from a brief to a design doc
+                From a one-paragraph brief to a design you can defend
               </h2>
-              <p className="mx-auto mt-3 max-w-lg text-slate-500">
-                System Atlas is a guided canvas for system design. Sketch the
-                architecture, reason about the trade-offs, and hand off
-                something a team can build.
+              <p className="mt-2 max-w-2xl text-slate-500">
+                Here is a URL shortener System Atlas generated: a typed
+                component diagram, the trade-off behind each choice, and a
+                decision record. Yours exports to Markdown, JSON, or PNG.
               </p>
+              <div className="mt-5">
+                <ExampleArchitecture />
+              </div>
+            </div>
 
-              <ol className="mx-auto mt-8 grid gap-4 text-left sm:grid-cols-3">
+            {/* How it works + start */}
+            <div className="p-6 sm:p-8">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                How it works
+              </p>
+              <ol className="grid gap-4 text-left sm:grid-cols-3">
                 {ONBOARDING_STEPS.map((step, i) => {
                   const Icon = step.icon;
                   return (
@@ -159,10 +170,7 @@ export default function DashboardPage() {
                 })}
               </ol>
 
-              <div className="mt-8 flex flex-col items-center gap-3">
-                <Button onClick={() => setNaming(true)}>
-                  <Plus className="h-4 w-4" /> Start a new architecture
-                </Button>
+              <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
                 <div className="flex items-center gap-3 text-sm text-slate-500">
                   <button
                     onClick={() => setShowBlueprints(true)}
@@ -189,6 +197,12 @@ export default function DashboardPage() {
                     {geminiApiKey ? "AI connected" : "Connect AI"}
                   </button>
                 </div>
+                <Button
+                  onClick={() => setNaming(true)}
+                  className="px-6 py-3 text-base"
+                >
+                  <Plus className="h-5 w-5" /> Start with your own brief
+                </Button>
               </div>
             </div>
           </Panel>
