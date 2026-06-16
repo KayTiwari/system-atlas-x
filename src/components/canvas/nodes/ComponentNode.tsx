@@ -3,10 +3,10 @@
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { CATALOG } from "@/lib/catalog";
 import type { ArchitectureFlowNode } from "@/lib/types";
+import { ComponentGlyph } from "@/components/canvas/ComponentGlyph";
 
 export function ComponentNode({ data, selected }: NodeProps<ArchitectureFlowNode>) {
   const entry = CATALOG[data.architectureType];
-  const Icon = entry.icon;
 
   return (
     <div
@@ -17,8 +17,12 @@ export function ComponentNode({ data, selected }: NodeProps<ArchitectureFlowNode
       }`}
     >
       <Handle type="target" position={Position.Left} />
-      <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-sm border border-navy-700 bg-paper-soft ${entry.accent}`}>
-        <Icon className="h-4 w-4" />
+      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-sm border border-navy-700 bg-paper-soft">
+        <ComponentGlyph
+          technology={data.technology}
+          fallbackIcon={entry.icon}
+          accent={entry.accent}
+        />
       </span>
       <div className="min-w-0">
         <p className="truncate text-sm font-semibold text-ink">{data.name}</p>

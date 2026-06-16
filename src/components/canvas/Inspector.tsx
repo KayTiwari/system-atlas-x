@@ -10,6 +10,7 @@ import type {
   DecisionCategory,
 } from "@/lib/types";
 import { ComparisonMatrix } from "@/components/tradeoffs/ComparisonMatrix";
+import { ComponentGlyph } from "@/components/canvas/ComponentGlyph";
 import { RuleOfThumbCard } from "@/components/tradeoffs/RuleOfThumbCard";
 
 type InspectorProps = {
@@ -224,15 +225,18 @@ export function Inspector({ node, onChange, onDelete }: InspectorProps) {
   }
 
   const entry = CATALOG[node.data.architectureType];
-  const Icon = entry.icon;
   const d = node.data;
 
   return (
     <aside className="flex h-full w-80 shrink-0 flex-col border-l border-navy-700 bg-navy-900/95">
       <div className="flex items-center justify-between border-b border-navy-700 px-4 py-3">
         <div className="flex items-center gap-2">
-          <span className={`grid h-8 w-8 place-items-center rounded-sm border border-navy-700 bg-paper-soft ${entry.accent}`}>
-            <Icon className="h-4 w-4" />
+          <span className="grid h-8 w-8 place-items-center rounded-sm border border-navy-700 bg-paper-soft">
+            <ComponentGlyph
+              technology={d.technology}
+              fallbackIcon={entry.icon}
+              accent={entry.accent}
+            />
           </span>
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-slate-500">

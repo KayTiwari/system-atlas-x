@@ -53,6 +53,82 @@ const TABS: { id: Tab; label: string; hint: string }[] = [
   { id: "export", label: "Export", hint: "JSON, Markdown, or PNG design doc" },
 ];
 
+function TabMark({ type }: { type: Tab }) {
+  const common = {
+    className: "h-[18px] w-[22px] shrink-0 text-brand-blue",
+    viewBox: "0 0 22 18",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    "aria-hidden": true,
+  };
+  const stroke = {
+    stroke: "currentColor",
+    strokeWidth: 2,
+    strokeLinecap: "square" as const,
+    strokeLinejoin: "miter" as const,
+  };
+
+  if (type === "canvas") {
+    return (
+      <svg {...common}>
+        <rect x="3" y="3" width="16" height="12" {...stroke} />
+        <path d="M11 3v12M3 9h16" {...stroke} />
+        <rect x="8" y="7" width="6" height="4" fill="currentColor" />
+      </svg>
+    );
+  }
+
+  if (type === "brief") {
+    return (
+      <svg {...common}>
+        <path d="M6 2h8l3 3v11H6z" {...stroke} />
+        <path d="M14 2v4h3M8 8h7M8 12h6" {...stroke} />
+      </svg>
+    );
+  }
+
+  if (type === "review") {
+    return (
+      <svg {...common}>
+        <circle cx="9" cy="8" r="5" {...stroke} />
+        <path d="M13 12l5 4" {...stroke} />
+      </svg>
+    );
+  }
+
+  if (type === "tradeoffs") {
+    return (
+      <svg {...common}>
+        <path d="M11 2v14M5 6h12M5 6l-3 6h6zM17 6l-3 6h6z" {...stroke} />
+      </svg>
+    );
+  }
+
+  if (type === "assist") {
+    return (
+      <svg {...common}>
+        <path d="M11 2v14M4 9h14M6 4l10 10M16 4L6 14" {...stroke} />
+        <circle cx="11" cy="9" r="2" fill="currentColor" />
+      </svg>
+    );
+  }
+
+  if (type === "decisions") {
+    return (
+      <svg {...common}>
+        <path d="M7 7V5a4 4 0 0 1 8 0v2" {...stroke} />
+        <path d="M4 8h14v7H4zM8 12h6" {...stroke} />
+      </svg>
+    );
+  }
+
+  return (
+    <svg {...common}>
+      <path d="M5 10v5h12v-5M11 2v9M7 7l4 4 4-4" {...stroke} />
+    </svg>
+  );
+}
+
 export default function ProjectPage({
   params,
 }: {
@@ -219,7 +295,7 @@ export default function ProjectPage({
                   : "text-slate-600 hover:bg-navy-900/70 hover:text-ink"
               }`}
             >
-              <span className={`atlas-tab-mark atlas-tab-mark-${t}`} aria-hidden="true" />
+              <TabMark type={t} />
               {label}
             </button>
           ))}
