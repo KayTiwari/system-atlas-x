@@ -10,13 +10,13 @@ import {
   type ArchitectureNodeType,
 } from "./types";
 
-export type TemplateGroup = "Pattern" | "Use case";
+export type BlueprintGroup = "Pattern" | "Use case";
 
-export type Template = {
+export type Blueprint = {
   id: string;
   name: string;
   summary: string;
-  group: TemplateGroup;
+  group: BlueprintGroup;
   build: () => NewProjectInput;
 };
 
@@ -74,7 +74,7 @@ function compose(
   return { name, description, brief: { ...emptyBrief(), ...brief }, nodes, edges };
 }
 
-/** Generate a use-case template from a tailored brief via the skeleton engine. */
+/** Generate a use-case blueprint from a tailored brief via the skeleton engine. */
 function fromBrief(
   name: string,
   description: string,
@@ -88,7 +88,7 @@ function fromBrief(
 const COL = 260;
 
 /** Canonical, industry-standard architecture patterns. */
-const PATTERNS: Template[] = [
+const PATTERNS: Blueprint[] = [
   {
     id: "three-tier",
     name: "Three-tier web app",
@@ -340,8 +340,8 @@ const PATTERNS: Template[] = [
   },
 ];
 
-/** Product-flavored use-case templates generated from briefs. */
-const USE_CASES: Template[] = [
+/** Product-flavored use-case blueprints generated from briefs. */
+const USE_CASES: Blueprint[] = [
   {
     id: "saas",
     name: "SaaS web app",
@@ -453,6 +453,6 @@ const USE_CASES: Template[] = [
   },
 ];
 
-export const TEMPLATES: Template[] = [...PATTERNS, ...USE_CASES];
+export const BLUEPRINTS: Blueprint[] = [...PATTERNS, ...USE_CASES];
 
-export const TEMPLATE_GROUPS: TemplateGroup[] = ["Pattern", "Use case"];
+export const BLUEPRINT_GROUPS: BlueprintGroup[] = ["Pattern", "Use case"];

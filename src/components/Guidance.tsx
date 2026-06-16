@@ -121,7 +121,7 @@ export function CanvasGuide({ onGoToBrief }: { onGoToBrief: () => void }) {
             <Step n={3} />
             <span>
               Or load a ready-made architecture from{" "}
-              <strong className="text-ink">templates</strong> on the dashboard.
+              <strong className="text-ink">blueprints</strong> on the dashboard.
             </span>
           </li>
         </ul>

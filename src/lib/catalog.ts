@@ -3,7 +3,9 @@ import {
   Archive,
   Boxes,
   Cloud,
+  CloudCog,
   Cpu,
+  GitBranch,
   Database,
   FileSearch,
   Globe,
@@ -15,6 +17,7 @@ import {
   MailWarning,
   Network,
   Plug,
+  Rocket,
   Server,
   ShieldCheck,
   Workflow,
@@ -32,6 +35,7 @@ export type PaletteGroup =
   | "Reliability"
   | "Security"
   | "Observability"
+  | "Platform"
   | "External";
 
 export type CatalogEntry = {
@@ -127,20 +131,26 @@ export const CATALOG: Record<ArchitectureNodeType, CatalogEntry> = {
   },
   authorization: {
     type: "authorization",
-    label: "Authorization Boundary",
+    label: "Authorization & RLS",
     group: "Security",
     icon: ShieldCheck,
     accent: "text-fuchsia-400",
-    purpose: "Decides what an authenticated identity is allowed to do (RBAC/ABAC).",
+    purpose:
+      "Decides what an authenticated identity is allowed to do (RBAC/ABAC) and enforces row-level security (RLS) at the data layer.",
     whenToUse: [
       "Multiple roles (admin vs user vs partner)",
       "Multi-tenant data isolation",
+      "Per-row access control enforced in the database",
     ],
     tradeoffs: [
       "Centralized policy is consistent but can be a bottleneck",
       "Per-service checks are flexible but easy to get inconsistent",
+      "RLS keeps enforcement close to the data but is easy to misconfigure",
     ],
-    commonPatterns: ["Policy checks on every privileged action, not just login"],
+    commonPatterns: [
+      "Policy checks on every privileged action, not just login",
+      "Postgres RLS policies scoped by tenant / owner",
+    ],
   },
   sql_database: {
     type: "sql_database",
@@ -296,17 +306,22 @@ export const CATALOG: Record<ArchitectureNodeType, CatalogEntry> = {
   },
   backup: {
     type: "backup",
-    label: "Backup / Restore",
+    label: "Backup & Recovery",
     group: "Reliability",
     icon: Archive,
     accent: "text-teal-400",
-    purpose: "Point-in-time recovery for durable data stores.",
+    purpose:
+      "Point-in-time recovery for durable data stores, paired with a tested restore and rollback plan.",
     whenToUse: ["Any system of record", "Anything you cannot afford to lose"],
     tradeoffs: [
       "Protects against data loss and corruption",
       "Backups are worthless if you never test restores",
     ],
-    commonPatterns: ["Automated snapshots", "Periodic restore drills"],
+    commonPatterns: [
+      "Automated snapshots",
+      "Periodic restore drills",
+      "Documented recovery runbook (RTO/RPO)",
+    ],
   },
   read_replica: {
     type: "read_replica",
@@ -381,6 +396,62 @@ export const CATALOG: Record<ArchitectureNodeType, CatalogEntry> = {
     ],
     commonPatterns: ["Metrics + logs + traces", "Alert on SLOs, not every blip"],
   },
+  ci_cd: {
+    type: "ci_cd",
+    label: "CI/CD & Version Control",
+    group: "Platform",
+    icon: GitBranch,
+    accent: "text-violet-400",
+    purpose:
+      "Source control plus an automated pipeline that builds, tests, and ships every change.",
+    whenToUse: [
+      "Any code that reaches more than one environment",
+      "More than one engineer touching the codebase",
+    ],
+    tradeoffs: [
+      "Catches regressions before they reach users",
+      "Pipeline upkeep and flaky tests cost time if neglected",
+    ],
+    commonPatterns: [
+      "PR checks → build → test → deploy on merge",
+      "One-click rollback to the last green build",
+    ],
+  },
+  hosting: {
+    type: "hosting",
+    label: "Hosting & Deployment",
+    group: "Platform",
+    icon: Rocket,
+    accent: "text-violet-400",
+    purpose: "Where the app runs and how new versions are rolled out to it.",
+    whenToUse: ["Anything that has to be reachable in production"],
+    tradeoffs: [
+      "Serverless/PaaS trades control for less operational burden",
+      "Containers/VMs give control but you own scaling and patching",
+    ],
+    commonPatterns: [
+      "Blue/green or rolling deploys behind a load balancer",
+      "Health checks gate traffic; failed deploys auto-roll-back",
+    ],
+  },
+  cloud_platform: {
+    type: "cloud_platform",
+    label: "Cloud & Compute",
+    group: "Platform",
+    icon: CloudCog,
+    accent: "text-violet-400",
+    purpose:
+      "The cloud account, network, and compute foundation everything else runs on.",
+    whenToUse: ["Any system not running on a single box you own"],
+    tradeoffs: [
+      "Managed infrastructure scales on demand",
+      "Cost, region, and IAM sprawl need governance from day one",
+    ],
+    commonPatterns: [
+      "Infrastructure as code (Terraform/CDK)",
+      "Isolated VPC + least-privilege cloud IAM",
+    ],
+  },
 };
 
 export const CATALOG_LIST: CatalogEntry[] = Object.values(CATALOG);
@@ -393,6 +464,7 @@ export const PALETTE_GROUPS: PaletteGroup[] = [
   "Reliability",
   "Security",
   "Observability",
+  "Platform",
   "External",
 ];
 

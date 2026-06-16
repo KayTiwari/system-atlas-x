@@ -62,6 +62,11 @@ export function generateSkeleton(brief: ArchitectureBrief): {
   if (ctx.availability === "high") specs.push({ type: "backup", col: 5 });
   specs.push({ type: "monitoring", col: 5 });
 
+  // Column 6: platform foundation every production system needs.
+  specs.push({ type: "cloud_platform", col: 6 });
+  specs.push({ type: "hosting", col: 6 });
+  specs.push({ type: "ci_cd", col: 6 });
+
   // Build nodes, stacking each column vertically and centering roughly.
   const byCol = new Map<number, Spec[]>();
   for (const s of specs) {
@@ -122,6 +127,10 @@ export function generateSkeleton(brief: ArchitectureBrief): {
   link("api_service", "audit_log");
   link("sql_database", "backup");
   link("api_service", "external_api");
+  // Platform foundation: code ships through CI/CD onto hosting on the cloud.
+  link("ci_cd", "hosting");
+  link("hosting", "api_service");
+  link("cloud_platform", "hosting");
 
   return { nodes, edges };
 }

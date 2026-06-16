@@ -27,7 +27,10 @@ export type ArchitectureNodeType =
   | "search"
   | "vector_database"
   | "external_api"
-  | "monitoring";
+  | "monitoring"
+  | "ci_cd"
+  | "hosting"
+  | "cloud_platform";
 
 /** Editable reasoning metadata attached to every node. */
 export type ArchitectureNodeData = {

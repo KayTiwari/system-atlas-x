@@ -59,6 +59,13 @@ describe("generateSkeleton", () => {
     const c = [...typeSet(generateSkeleton(b).nodes)].sort();
     expect(a).toEqual(c);
   });
+
+  it("always includes the platform foundation (cloud, hosting, CI/CD)", () => {
+    const t = typeSet(generateSkeleton(brief()).nodes);
+    expect(t.has("cloud_platform")).toBe(true);
+    expect(t.has("hosting")).toBe(true);
+    expect(t.has("ci_cd")).toBe(true);
+  });
 });
 
 describe("lintArchitecture", () => {
@@ -93,6 +100,30 @@ describe("lintArchitecture", () => {
     });
     const audit = findings.find((f) => f.id === "sensitive-no-audit-log");
     expect(audit?.severity).toBe("critical");
+  });
+
+  it("flags a missing CI/CD pipeline and hosting target", () => {
+    const ids = lintArchitecture({
+      brief: brief(),
+      nodes: [node("web_app"), node("api_service"), node("sql_database")],
+    }).map((f) => f.id);
+    expect(ids).toContain("no-ci-cd");
+    expect(ids).toContain("no-hosting");
+  });
+
+  it("clears the platform findings once those pieces are present", () => {
+    const ids = lintArchitecture({
+      brief: brief(),
+      nodes: [
+        node("web_app"),
+        node("api_service"),
+        node("sql_database"),
+        node("ci_cd"),
+        node("hosting"),
+      ],
+    }).map((f) => f.id);
+    expect(ids).not.toContain("no-ci-cd");
+    expect(ids).not.toContain("no-hosting");
   });
 });
 

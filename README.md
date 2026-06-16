@@ -44,7 +44,7 @@ Two engines then work over that model:
   suggestions in the Review tab.
 - **Decision records (ADRs)** - capture architecture choices, generated in one click from
   a trade-off recommendation.
-- **Templates** - load industry patterns (three-tier, microservices, event-driven,
+- **Blueprints** - load industry patterns (three-tier, microservices, event-driven,
   serverless, read-heavy, rate-limited public API) or product use cases (SaaS, document
   processing, real-time chat, e-commerce, AI/RAG).
 - **Export** - JSON (round-trips), a Markdown design doc, and a PNG of the canvas.
@@ -66,7 +66,7 @@ single source of truth across skeleton, review, and recommendations.
 
 ## Using the app
 
-1. **Design Wizard** (or pick a template) to create a project.
+1. **Design Wizard** (or pick a blueprint) to create a project.
 2. Fill the **Brief**, then **Generate skeleton**.
 3. On the **Canvas**, drag components from the palette, connect them, and click any node to
    edit its reasoning in the inspector. Use **Swap technology** to try alternatives.
@@ -134,7 +134,7 @@ src/
     store.ts           # zustand + localStorage persistence (projects, suggestions, key)
     analysis.ts        # deriveContext: brief -> normalized flags (pure)
     catalog.ts         # component library + knowledge (drives palette + inspector)
-    templates.ts       # starter reference architectures
+    blueprints.ts      # starter reference architectures
     skeleton.ts        # brief -> starter graph (pure)
     linter.ts          # Architecture Review rules (pure)
     tradeoffs.ts       # technology options + scores + rules of thumb

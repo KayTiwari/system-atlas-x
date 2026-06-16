@@ -12,9 +12,12 @@ import {
   Sparkles,
   KeyRound,
   ExternalLink,
+  PencilRuler,
+  Scale,
+  FileText,
 } from "lucide-react";
 import { useAtlasStore, useHasHydrated } from "@/lib/store";
-import { TEMPLATES, TEMPLATE_GROUPS } from "@/lib/templates";
+import { BLUEPRINTS, BLUEPRINT_GROUPS } from "@/lib/blueprints";
 import { Button, Panel, Chip } from "@/components/ui/primitives";
 
 export default function DashboardPage() {
@@ -26,7 +29,7 @@ export default function DashboardPage() {
   const deleteProject = useAtlasStore((s) => s.deleteProject);
   const geminiApiKey = useAtlasStore((s) => s.geminiApiKey);
 
-  const [showTemplates, setShowTemplates] = useState(false);
+  const [showBlueprints, setShowBlueprints] = useState(false);
   const [naming, setNaming] = useState(false);
   const [showKey, setShowKey] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
@@ -67,35 +70,40 @@ export default function DashboardPage() {
               decisions, and implementation-ready design docs.
             </p>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <Button onClick={() => setNaming(true)}>
-              <Wand2 className="h-4 w-4" /> Design Wizard
-            </Button>
-            <Button variant="secondary" onClick={() => setShowTemplates(true)}>
-              <LayoutTemplate className="h-4 w-4" /> From template
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <Upload className="h-4 w-4" /> Import JSON
-            </Button>
-            <Button variant="secondary" onClick={() => setShowKey(true)}>
-              <Sparkles className="h-4 w-4" />
-              {geminiApiKey ? "AI connected" : "Connect AI"}
-            </Button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="application/json,.json"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) onImportFile(file);
-                e.target.value = "";
-              }}
-            />
-          </div>
+          {hydrated && projects.length > 0 && (
+            <div className="flex flex-wrap gap-3">
+              <Button onClick={() => setNaming(true)}>
+                <Wand2 className="h-4 w-4" /> Design Wizard
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => setShowBlueprints(true)}
+              >
+                <LayoutTemplate className="h-4 w-4" /> From blueprint
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="h-4 w-4" /> Import JSON
+              </Button>
+              <Button variant="secondary" onClick={() => setShowKey(true)}>
+                <Sparkles className="h-4 w-4" />
+                {geminiApiKey ? "AI connected" : "Connect AI"}
+              </Button>
+            </div>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) onImportFile(file);
+              e.target.value = "";
+            }}
+          />
         </header>
 
         {importError && (
@@ -107,21 +115,75 @@ export default function DashboardPage() {
         {!hydrated ? (
           <p className="text-slate-500">Loading…</p>
         ) : projects.length === 0 ? (
-          <Panel className="p-12 text-center">
-            <p className="text-lg font-medium text-slate-700">
-              No architectures yet
-            </p>
-            <p className="mx-auto mt-2 max-w-md text-slate-500">
-              Start from a blank canvas, pick a starter template, or import a
-              project you exported earlier.
-            </p>
-            <div className="mt-6 flex justify-center gap-3">
-              <Button onClick={() => setNaming(true)}>
-                <Wand2 className="h-4 w-4" /> Design Wizard
-              </Button>
-              <Button variant="secondary" onClick={() => setShowTemplates(true)}>
-                <LayoutTemplate className="h-4 w-4" /> Browse templates
-              </Button>
+          <Panel className="p-10 sm:p-12">
+            <div className="mx-auto max-w-2xl text-center">
+              <div className="eyebrow mb-3 flex items-center justify-center gap-2 text-brand-cyan">
+                <Sparkles className="h-4 w-4" />
+                <span className="text-xs font-semibold uppercase tracking-wide">
+                  New here
+                </span>
+              </div>
+              <h2 className="text-2xl font-semibold tracking-tight">
+                Three steps from a brief to a design doc
+              </h2>
+              <p className="mx-auto mt-3 max-w-lg text-slate-500">
+                System Atlas is a guided canvas for system design. Sketch the
+                architecture, reason about the trade-offs, and hand off
+                something a team can build.
+              </p>
+
+              <ol className="mx-auto mt-8 grid gap-4 text-left sm:grid-cols-3">
+                {ONBOARDING_STEPS.map((step, i) => {
+                  const Icon = step.icon;
+                  return (
+                    <li
+                      key={step.title}
+                      className="rounded-xl border border-navy-700 bg-navy-900/40 p-4"
+                    >
+                      <div className="mb-2 flex items-center gap-2">
+                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-brand text-xs font-semibold text-white">
+                          {i + 1}
+                        </span>
+                        <Icon className="h-4 w-4 text-brand-cyan" />
+                        <span className="font-semibold">{step.title}</span>
+                      </div>
+                      <p className="text-sm text-slate-500">{step.body}</p>
+                    </li>
+                  );
+                })}
+              </ol>
+
+              <div className="mt-8 flex flex-col items-center gap-3">
+                <Button onClick={() => setNaming(true)}>
+                  <Wand2 className="h-4 w-4" /> Start with the Design Wizard
+                </Button>
+                <div className="flex items-center gap-3 text-sm text-slate-500">
+                  <button
+                    onClick={() => setShowBlueprints(true)}
+                    className="transition hover:text-ink"
+                  >
+                    Browse blueprints
+                  </button>
+                  <span aria-hidden className="text-navy-600">
+                    ·
+                  </span>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="transition hover:text-ink"
+                  >
+                    Import a project
+                  </button>
+                  <span aria-hidden className="text-navy-600">
+                    ·
+                  </span>
+                  <button
+                    onClick={() => setShowKey(true)}
+                    className="transition hover:text-ink"
+                  >
+                    {geminiApiKey ? "AI connected" : "Connect AI"}
+                  </button>
+                </div>
+              </div>
             </div>
           </Panel>
         ) : (
@@ -171,10 +233,10 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {showTemplates && (
+      {showBlueprints && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-6"
-          onClick={() => setShowTemplates(false)}
+          onClick={() => setShowBlueprints(false)}
         >
           <Panel
             className="max-h-[80vh] w-full max-w-2xl overflow-y-auto bg-navy-900 p-6 thin-scroll"
@@ -183,13 +245,13 @@ export default function DashboardPage() {
             <div
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 className="mb-1 text-xl font-bold">Start from a template</h2>
+              <h2 className="mb-1 text-xl font-bold">Start from a blueprint</h2>
               <p className="mb-5 text-sm text-slate-500">
                 Load a reference architecture you can refine - swap any component
                 for an alternative from its inspector.
               </p>
-              {TEMPLATE_GROUPS.map((group) => {
-                const items = TEMPLATES.filter((t) => t.group === group);
+              {BLUEPRINT_GROUPS.map((group) => {
+                const items = BLUEPRINTS.filter((t) => t.group === group);
                 if (items.length === 0) return null;
                 return (
                   <div key={group} className="mb-5">
@@ -219,7 +281,7 @@ export default function DashboardPage() {
                 );
               })}
               <div className="mt-6 flex justify-end">
-                <Button variant="ghost" onClick={() => setShowTemplates(false)}>
+                <Button variant="ghost" onClick={() => setShowBlueprints(false)}>
                   Close
                 </Button>
               </div>
@@ -242,6 +304,28 @@ export default function DashboardPage() {
     </main>
   );
 }
+
+const ONBOARDING_STEPS: {
+  icon: typeof PencilRuler;
+  title: string;
+  body: string;
+}[] = [
+  {
+    icon: PencilRuler,
+    title: "Design",
+    body: "Drop components on a canvas or start from a reference blueprint.",
+  },
+  {
+    icon: Scale,
+    title: "Decide",
+    body: "Weigh trade-offs with rules of thumb and side-by-side comparisons.",
+  },
+  {
+    icon: FileText,
+    title: "Document",
+    body: "Export a Markdown, JSON, or PNG design doc to share.",
+  },
+];
 
 const KEY_URL = "https://aistudio.google.com/app/apikey";
 

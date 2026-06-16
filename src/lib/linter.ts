@@ -181,6 +181,34 @@ const RULES: Rule[] = [
           }
         : null,
   },
+  {
+    id: "no-ci-cd",
+    severity: "info",
+    title: "No CI/CD pipeline",
+    evaluate: (has, _ctx, nodes) =>
+      nodes.length > 2 && !has("ci_cd")
+        ? {
+            description:
+              "There is no version control / CI/CD pipeline shipping changes safely.",
+            recommendation:
+              "Add a CI/CD pipeline (build, test, deploy on merge) with one-click rollback.",
+          }
+        : null,
+  },
+  {
+    id: "no-hosting",
+    severity: "info",
+    title: "No hosting / deployment target",
+    evaluate: (has, _ctx, nodes) =>
+      nodes.length > 2 && !has("hosting")
+        ? {
+            description:
+              "No hosting / deployment target describes where the app runs and how versions roll out.",
+            recommendation:
+              "Add a hosting & deployment component (serverless, containers, or PaaS) with health-gated rollouts.",
+          }
+        : null,
+  },
 ];
 
 /** Pure: run the Architecture Review rules over a project. */
