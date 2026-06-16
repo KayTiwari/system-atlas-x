@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Plus,
+  LayoutTemplate,
   Upload,
   Trash2,
   ArrowRight,
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import { useAtlasStore, useHasHydrated } from "@/lib/store";
 import { BLUEPRINTS, BLUEPRINT_GROUPS } from "@/lib/blueprints";
-import { Button, Panel, Chip } from "@/components/ui/primitives";
+import { Button, Panel, Chip, ConfirmDialog } from "@/components/ui/primitives";
 import { ExampleArchitecture } from "@/components/marketing/ExampleArchitecture";
 
 export default function DashboardPage() {
@@ -31,6 +32,7 @@ export default function DashboardPage() {
   const [naming, setNaming] = useState(false);
   const [showKey, setShowKey] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
+  const [deleteProjectId, setDeleteProjectId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function createNamed(name: string) {
@@ -49,40 +51,43 @@ export default function DashboardPage() {
     }
   }
 
+  const projectToDelete =
+    deleteProjectId ? projects.find((project) => project.id === deleteProjectId) : null;
+
   return (
     <main className="min-h-screen bg-gradient-dark">
-      <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-16">
-        <header className="mb-12 border-b border-navy-700 pb-10">
+      <div className="mx-auto max-w-6xl px-5 py-10 sm:px-6 sm:py-14">
+        <header className="mb-12 border-b border-navy-700 pb-9">
           <div className="flex flex-wrap items-end justify-between gap-8">
             <div className="max-w-3xl">
-              <div className="eyebrow mb-6 flex items-center gap-3 text-brand-cyan">
-                <Boxes className="h-5 w-5" />
-                <span className="text-sm font-semibold uppercase tracking-[0.34em]">
+              <div className="eyebrow mb-5 flex items-center gap-3 text-brand-cyan">
+                <Boxes className="h-4 w-4" />
+                <span className="text-xs font-semibold uppercase tracking-[0.32em]">
                   System Atlas
                 </span>
               </div>
-              <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl">
+              <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl">
                 Your <span className="text-brand-cyan">architectures</span>
               </h1>
-              <p className="mt-6 max-w-3xl text-2xl leading-relaxed text-slate-500 sm:text-3xl">
+              <p className="mt-5 max-w-3xl text-xl leading-relaxed text-slate-500 sm:text-2xl">
                 Turn product requirements into system architecture, trade-off
                 decisions, and implementation-ready design docs.
               </p>
-              <p className="mt-8 inline-flex max-w-full items-center gap-2 rounded-full border border-navy-700 bg-navy-900/45 px-4 py-2 text-sm text-slate-500 sm:text-base">
+              <p className="mt-7 inline-flex max-w-full items-center gap-2 rounded-full border border-navy-700 bg-navy-900/45 px-4 py-2 text-sm text-slate-500">
                 <HardDrive className="h-4 w-4 shrink-0" />
                 <span>Stored in your browser. Export a project to keep or move it.</span>
               </p>
             </div>
             <div className="flex w-full flex-wrap justify-start gap-2 lg:w-auto lg:justify-end">
               <Button onClick={() => setNaming(true)} className="min-w-40">
-                New architecture
+                <Plus className="h-4 w-4" /> New architecture
               </Button>
               <Button
                 variant="secondary"
                 onClick={() => setShowBlueprints(true)}
                 className="min-w-36"
               >
-                From blueprint
+                <LayoutTemplate className="h-4 w-4" /> From Blueprint
               </Button>
               <Button
                 variant="secondary"
@@ -232,13 +237,7 @@ export default function DashboardPage() {
                   </Button>
                   <button
                     title="Delete project"
-                    onClick={() => {
-                      if (
-                        window.confirm(`Delete "${p.name}"? This cannot be undone.`)
-                      ) {
-                        deleteProject(p.id);
-                      }
-                    }}
+                    onClick={() => setDeleteProjectId(p.id)}
                     className="rounded-md p-2 text-slate-500 transition hover:bg-red-500/10 hover:text-red-500"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -325,6 +324,20 @@ export default function DashboardPage() {
       )}
 
       {showKey && <GeminiKeyModal onClose={() => setShowKey(false)} />}
+
+      {projectToDelete && (
+        <ConfirmDialog
+          title={`Delete "${projectToDelete.name}"?`}
+          body="This removes the architecture from this browser. Export it first if you want a copy."
+          confirmLabel="Delete project"
+          destructive
+          onCancel={() => setDeleteProjectId(null)}
+          onConfirm={() => {
+            deleteProject(projectToDelete.id);
+            setDeleteProjectId(null);
+          }}
+        />
+      )}
     </main>
   );
 }

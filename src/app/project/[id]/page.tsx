@@ -32,7 +32,7 @@ import { DecisionList } from "@/components/decisions/DecisionList";
 import { ExportDialog } from "@/components/export/ExportDialog";
 import { AssistPanel } from "@/components/ai/AssistPanel";
 import { HelpButton, CanvasGuide } from "@/components/Guidance";
-import { Chip } from "@/components/ui/primitives";
+import { Chip, ConfirmDialog } from "@/components/ui/primitives";
 
 type Tab =
   | "canvas"
@@ -76,6 +76,7 @@ export default function ProjectPage({
       : "canvas"
   );
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [confirmReplaceCanvas, setConfirmReplaceCanvas] = useState(false);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<ArchitectureFlowNode>(
     seed?.nodes ?? []
@@ -128,25 +129,26 @@ export default function ProjectPage({
     [selectedNodeId, setNodes]
   );
 
-  const generateFromBrief = useCallback(() => {
+  const applyGeneratedSkeleton = useCallback(() => {
     const brief = useAtlasStore
       .getState()
       .projects.find((p) => p.id === id)?.brief;
     if (!brief) return;
-    if (
-      nodes.length > 0 &&
-      !window.confirm(
-        "Replace the current canvas with a freshly generated skeleton?"
-      )
-    ) {
-      return;
-    }
     const { nodes: n, edges: e } = generateSkeleton(brief);
     setNodes(n);
     setEdges(e);
     setSelectedNodeId(null);
     setTab("canvas");
-  }, [id, nodes.length, setNodes, setEdges]);
+    setConfirmReplaceCanvas(false);
+  }, [id, setNodes, setEdges]);
+
+  const generateFromBrief = useCallback(() => {
+    if (nodes.length > 0) {
+      setConfirmReplaceCanvas(true);
+      return;
+    }
+    applyGeneratedSkeleton();
+  }, [applyGeneratedSkeleton, nodes.length]);
 
   const deleteNode = useCallback(
     (nodeId: string) => {
@@ -291,6 +293,17 @@ export default function ProjectPage({
       </div>
 
       <HelpButton />
+
+      {confirmReplaceCanvas && (
+        <ConfirmDialog
+          title="Replace the current canvas?"
+          body="Generating a new skeleton will replace the nodes and connections currently on this canvas."
+          confirmLabel="Replace canvas"
+          destructive
+          onCancel={() => setConfirmReplaceCanvas(false)}
+          onConfirm={applyGeneratedSkeleton}
+        />
+      )}
     </main>
   );
 }

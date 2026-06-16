@@ -71,3 +71,56 @@ export function Chip({ label }: { label: string }) {
     </span>
   );
 }
+
+export function ConfirmDialog({
+  title,
+  body,
+  confirmLabel,
+  cancelLabel = "Cancel",
+  destructive = false,
+  onCancel,
+  onConfirm,
+}: {
+  title: string;
+  body: string;
+  confirmLabel: string;
+  cancelLabel?: string;
+  destructive?: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/45 p-5 backdrop-blur-sm"
+      role="presentation"
+      onClick={onCancel}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-dialog-title"
+        aria-describedby="confirm-dialog-body"
+        className="w-full max-w-md rounded-md border border-navy-700 bg-navy-900 p-6 shadow-[0_24px_80px_rgba(28,27,25,0.22)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-cyan">
+          Confirm action
+        </p>
+        <h2 id="confirm-dialog-title" className="mt-2 text-xl font-semibold">
+          {title}
+        </h2>
+        <p id="confirm-dialog-body" className="mt-3 text-sm leading-relaxed text-slate-600">
+          {body}
+        </p>
+        <div className="mt-6 flex flex-wrap justify-end gap-2">
+          <Button variant="ghost" onClick={onCancel}>
+            {cancelLabel}
+          </Button>
+          <Button variant={destructive ? "danger" : "primary"} onClick={onConfirm}>
+            {confirmLabel}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
