@@ -87,7 +87,7 @@ export default function DashboardPage() {
                 onClick={() => setShowBlueprints(true)}
                 className="min-w-36"
               >
-                <LayoutTemplate className="h-4 w-4" /> From Blueprint
+                <LayoutTemplate className="h-4 w-4" /> Browse Blueprints
               </Button>
               <Button
                 variant="secondary"
@@ -172,33 +172,7 @@ export default function DashboardPage() {
                 })}
               </ol>
 
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-slate-500">
-                  <button
-                    onClick={() => setShowBlueprints(true)}
-                    className="transition hover:text-ink"
-                  >
-                    Browse blueprints
-                  </button>
-                  <span aria-hidden className="text-navy-600">
-                    ·
-                  </span>
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="transition hover:text-ink"
-                  >
-                    Import a project
-                  </button>
-                  <span aria-hidden className="text-navy-600">
-                    ·
-                  </span>
-                  <button
-                    onClick={() => setShowKey(true)}
-                    className="transition hover:text-ink"
-                  >
-                    {geminiApiKey ? "AI connected" : "Connect AI"}
-                  </button>
-                </div>
+              <div className="mt-8 flex justify-end">
                 <Button
                   onClick={() => setNaming(true)}
                   className="px-6 py-3 text-base"
