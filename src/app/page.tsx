@@ -120,7 +120,14 @@ export default function DashboardPage() {
         )}
 
         {!hydrated ? (
-          <p className="text-slate-500">Loading…</p>
+          <Panel className="p-10 sm:p-12" aria-busy="true">
+            <div className="mx-auto max-w-2xl animate-pulse space-y-4">
+              <div className="h-7 w-56 rounded bg-navy-700/70" />
+              <div className="h-4 w-full rounded bg-navy-700/50" />
+              <div className="h-4 w-3/4 rounded bg-navy-700/50" />
+              <div className="mt-2 h-32 w-full rounded-xl bg-navy-700/30" />
+            </div>
+          </Panel>
         ) : projects.length === 0 ? (
           <Panel className="overflow-hidden">
             {/* Lead with the output: a real generated architecture */}
