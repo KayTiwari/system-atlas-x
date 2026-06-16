@@ -77,14 +77,14 @@ function Flow(props: CanvasProps) {
         proOptions={{ hideAttribution: true }}
         defaultEdgeOptions={{ animated: true }}
       >
-        <Background color="#1e2d45" gap={20} />
-        <Controls className="!bg-navy-800" />
+        <Background color="#d8d0c1" gap={24} />
+        <Controls className="!bg-navy-900" />
         <MiniMap
           pannable
           zoomable
           className="!bg-navy-900"
-          maskColor="rgba(8,13,26,0.7)"
-          nodeColor="#1e2d45"
+          maskColor="rgba(247, 245, 240, 0.72)"
+          nodeColor="#1f4d44"
         />
       </ReactFlow>
     </div>

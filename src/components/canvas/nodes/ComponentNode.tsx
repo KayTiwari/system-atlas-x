@@ -10,15 +10,15 @@ export function ComponentNode({ data, selected }: NodeProps<ArchitectureFlowNode
 
   return (
     <div
-      className={`flex w-48 items-center gap-3 rounded-xl border bg-navy-800 px-3 py-2.5 shadow-lg transition ${
+      className={`flex w-52 items-center gap-3 rounded-md border bg-navy-900 px-3 py-2.5 shadow-[0_10px_26px_rgba(28,27,25,0.08)] transition ${
         selected
-          ? "border-brand-blue ring-2 ring-brand-blue/40"
+          ? "border-brand-blue ring-2 ring-brand-blue/20"
           : "border-navy-700"
       }`}
     >
       <Handle type="target" position={Position.Left} />
-      <span className={`shrink-0 ${entry.accent}`}>
-        <Icon className="h-5 w-5" />
+      <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-sm border border-navy-700 bg-paper-soft ${entry.accent}`}>
+        <Icon className="h-4 w-4" />
       </span>
       <div className="min-w-0">
         <p className="truncate text-sm font-semibold text-ink">{data.name}</p>

@@ -1,14 +1,4 @@
-import {
-  Globe,
-  Network,
-  ShieldCheck,
-  Server,
-  Zap,
-  Database,
-  ChevronRight,
-  Scale,
-  FileText,
-} from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 /**
  * A static, hand-built sample of what System Atlas produces from a one-paragraph
@@ -18,38 +8,38 @@ import {
  */
 export function ExampleArchitecture() {
   return (
-    <div className="rounded-xl border border-navy-700 bg-navy-900/50 p-4 sm:p-5">
+    <div className="rounded-md border border-navy-700 bg-navy-900/50 p-4 sm:p-5">
       {/* Diagram */}
       <div className="flex items-stretch justify-center gap-1.5 overflow-x-auto pb-1 thin-scroll sm:gap-2">
-        <Node icon={Globe} accent="text-sky-400" name="Client" tech="Web + mobile" />
+        <Node code="CL" accent="text-sky-700" name="Client" tech="Web + mobile" />
         <Arrow />
         <Column>
           <Node
-            icon={Network}
-            accent="text-indigo-400"
+            code="GW"
+            accent="text-indigo-700"
             name="API Gateway"
             tech="Routing + auth"
           />
           <Node
-            icon={ShieldCheck}
-            accent="text-fuchsia-400"
+            code="RL"
+            accent="text-fuchsia-700"
             name="Rate limiter"
             tech="Abuse control"
           />
         </Column>
         <Arrow />
         <Node
-          icon={Server}
-          accent="text-emerald-400"
+          code="API"
+          accent="text-emerald-700"
           name="App service"
           tech="Stateless API"
         />
         <Arrow />
         <Column>
-          <Node icon={Zap} accent="text-cyan-400" name="Cache" tech="Redis" />
+          <Node code="CA" accent="text-cyan-700" name="Cache" tech="Redis" />
           <Node
-            icon={Database}
-            accent="text-blue-400"
+            code="DB"
+            accent="text-blue-700"
             name="Primary store"
             tech="Postgres"
           />
@@ -59,13 +49,11 @@ export function ExampleArchitecture() {
       {/* Output artifacts */}
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <Artifact
-          icon={Scale}
           kind="Trade-off"
           title="Postgres vs DynamoDB"
           body="Postgres - relational data, transactions, and your scale fit a single primary with read replicas."
         />
         <Artifact
-          icon={FileText}
           kind="Decision"
           title="ADR-001 · Primary datastore"
           body="Use Postgres for the primary store; revisit if write volume outgrows a single node."
@@ -80,20 +68,20 @@ function Column({ children }: { children: React.ReactNode }) {
 }
 
 function Node({
-  icon: Icon,
+  code,
   accent,
   name,
   tech,
 }: {
-  icon: typeof Globe;
+  code: string;
   accent: string;
   name: string;
   tech: string;
 }) {
   return (
-    <div className="flex w-36 shrink-0 items-center gap-2.5 rounded-lg border border-navy-700 bg-navy-800 px-3 py-2 shadow-sm">
-      <span className={`shrink-0 ${accent}`}>
-        <Icon className="h-4 w-4" />
+    <div className="flex w-36 shrink-0 items-center gap-2.5 rounded-md border border-navy-700 bg-navy-900 px-3 py-2 shadow-sm">
+      <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-sm border border-navy-700 bg-paper-soft font-mono text-[10px] font-semibold ${accent}`}>
+        {code}
       </span>
       <div className="min-w-0">
         <p className="truncate text-xs font-semibold text-ink">{name}</p>
@@ -112,21 +100,18 @@ function Arrow() {
 }
 
 function Artifact({
-  icon: Icon,
   kind,
   title,
   body,
 }: {
-  icon: typeof Globe;
   kind: string;
   title: string;
   body: string;
 }) {
   return (
-    <div className="rounded-lg border border-navy-700 bg-navy-800/60 p-3">
+    <div className="rounded-md border border-navy-700 bg-paper-soft/70 p-3">
       <div className="mb-1 flex items-center gap-1.5 text-brand-cyan">
-        <Icon className="h-3.5 w-3.5" />
-        <span className="text-[11px] font-semibold uppercase tracking-wide">
+        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em]">
           {kind}
         </span>
       </div>

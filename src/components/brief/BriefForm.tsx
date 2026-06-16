@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, X, Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, Plus } from "lucide-react";
 import { useAtlasStore } from "@/lib/store";
 import type {
   ArchitectureBrief,
@@ -37,8 +37,11 @@ export function BriefForm({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Architecture brief</h2>
-        <p className="mt-1 text-slate-500">
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-cyan">
+          Requirements intake
+        </p>
+        <h2 className="mt-1 text-2xl font-bold">Architecture brief</h2>
+        <p className="mt-1 max-w-2xl text-slate-500">
           Answer the brief, then generate a starting architecture you can refine
           on the canvas. The brief also feeds the review and tradeoff engine.
         </p>
@@ -53,8 +56,8 @@ export function BriefForm({
             className="group flex-1 text-left"
           >
             <div
-              className={`h-1.5 rounded-full transition ${
-                i <= step ? "bg-gradient-brand" : "bg-navy-700"
+              className={`h-1.5 rounded-sm transition ${
+                i <= step ? "bg-brand-blue" : "bg-navy-700"
               }`}
             />
             <span
@@ -162,31 +165,31 @@ export function BriefForm({
       </Panel>
 
       {/* Step navigation + generate */}
-      <div className="sticky bottom-0 flex items-center justify-between gap-3 border-t border-navy-700 bg-navy-900/95 py-4 backdrop-blur">
-        <div>
+      <div className="sticky bottom-0 -mx-6 flex flex-wrap items-center justify-between gap-3 border-t border-navy-700 bg-navy-900/95 px-6 py-4 backdrop-blur">
+        <div className="min-h-10">
           {step > 0 && (
             <Button variant="ghost" onClick={() => setStep(step - 1)}>
-              <ChevronLeft className="h-4 w-4" /> Back
+              Back
             </Button>
           )}
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-3">
           {isLast && !canGenerate && (
-            <span className="hidden text-xs text-slate-500 sm:block">
+            <span className="text-xs text-slate-500">
               Add what you&apos;re building and one core flow to generate.
             </span>
           )}
           {!isLast && (
-            <Button variant="secondary" onClick={() => setStep(step + 1)}>
-              Next <ChevronRight className="h-4 w-4" />
+            <Button variant="secondary" onClick={() => setStep(step + 1)} className="min-w-28">
+              Next
             </Button>
           )}
           <Button
             onClick={onGenerateSkeleton}
             disabled={!canGenerate}
-            className="shrink-0 px-5 py-2.5"
+            className="min-w-40 shrink-0 px-5 py-2.5"
           >
-            <Sparkles className="h-4 w-4" /> Generate skeleton
+            Generate skeleton
           </Button>
         </div>
       </div>
@@ -225,7 +228,7 @@ function Text({
   example?: string;
 }) {
   const cls =
-    "w-full rounded-lg border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none focus:border-brand-blue";
+    "w-full rounded-md border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none focus:border-brand-blue";
   return (
     <label className="block">
       <span className="mb-1.5 block text-sm font-medium text-slate-600">
@@ -279,7 +282,7 @@ function Select<T extends string>({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as T)}
-        className="w-full rounded-lg border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none focus:border-brand-blue"
+        className="w-full rounded-md border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none focus:border-brand-blue"
       >
         {options.map(([v, l]) => (
           <option key={v} value={v}>
@@ -321,7 +324,7 @@ function List({
           {values.map((v, i) => (
             <span
               key={`${v}-${i}`}
-              className="inline-flex items-center gap-1 rounded-md bg-navy-700 px-2 py-1 text-xs text-slate-700"
+              className="inline-flex items-center gap-1 rounded-sm bg-paper-soft px-2 py-1 text-xs text-slate-700"
             >
               {v}
               <button
@@ -345,7 +348,7 @@ function List({
               add();
             }
           }}
-          className="w-full rounded-lg border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none focus:border-brand-blue"
+          className="w-full rounded-md border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none focus:border-brand-blue"
         />
         <button
           onClick={add}

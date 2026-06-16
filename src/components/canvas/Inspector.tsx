@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Trash2, X, Plus, Lightbulb, Repeat, Check } from "lucide-react";
+import { Trash2, X, Plus, Check } from "lucide-react";
 import { CATALOG } from "@/lib/catalog";
 import { optionsForCategory } from "@/lib/tradeoffs";
 import type {
@@ -32,7 +32,7 @@ function TextField({
   textarea?: boolean;
 }) {
   const cls =
-    "w-full rounded-lg border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-brand-blue";
+    "w-full rounded-md border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-brand-blue";
   return (
     <label className="block">
       <span className="mb-1 block text-xs font-medium text-slate-500">
@@ -92,7 +92,7 @@ function TechnologyField({
   }
 
   const cls =
-    "w-full rounded-lg border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-brand-blue";
+    "w-full rounded-md border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-brand-blue";
 
   return (
     <div className="relative">
@@ -119,7 +119,7 @@ function TechnologyField({
         className={cls}
       />
       {showList && (
-        <ul className="absolute z-10 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border border-navy-700 bg-navy-900 py-1 shadow-xl thin-scroll">
+        <ul className="absolute z-10 mt-1 max-h-56 w-full overflow-y-auto rounded-md border border-navy-700 bg-navy-900 py-1 shadow-xl thin-scroll">
           {matches.map((o) => (
             <li key={o.id}>
               <button
@@ -170,7 +170,7 @@ function ListField({
           {values.map((v, i) => (
             <span
               key={`${v}-${i}`}
-              className="inline-flex items-center gap-1 rounded-md bg-navy-700 px-2 py-1 text-xs text-slate-700"
+              className="inline-flex items-center gap-1 rounded-sm bg-paper-soft px-2 py-1 text-xs text-slate-700"
             >
               {v}
               <button
@@ -194,11 +194,11 @@ function ListField({
               add();
             }
           }}
-          className="w-full rounded-lg border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none focus:border-brand-blue"
+          className="w-full rounded-md border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none focus:border-brand-blue"
         />
         <button
           onClick={add}
-          className="shrink-0 rounded-lg border border-navy-700 px-2 text-slate-600 hover:border-brand-blue/50 hover:text-ink"
+          className="shrink-0 rounded-md border border-navy-700 px-2 text-slate-600 hover:border-brand-blue/50 hover:bg-paper-soft hover:text-ink"
         >
           <Plus className="h-4 w-4" />
         </button>
@@ -210,8 +210,12 @@ function ListField({
 export function Inspector({ node, onChange, onDelete }: InspectorProps) {
   if (!node) {
     return (
-      <aside className="flex h-full w-80 shrink-0 flex-col items-center justify-center border-l border-navy-700 bg-navy-900 px-6 text-center">
-        <p className="text-sm text-slate-500">
+      <aside className="flex h-full w-80 shrink-0 flex-col items-center justify-center border-l border-navy-700 bg-navy-900/95 px-6 text-center">
+        <div className="mb-4 h-20 w-28 rounded-md border border-dashed border-navy-600 bg-paper-soft atlas-rule opacity-80" />
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-cyan">
+          Inspector idle
+        </p>
+        <p className="mt-2 text-sm text-slate-500">
           Select a component to edit its reasoning, or drag one from the left to
           start.
         </p>
@@ -224,13 +228,18 @@ export function Inspector({ node, onChange, onDelete }: InspectorProps) {
   const d = node.data;
 
   return (
-    <aside className="flex h-full w-80 shrink-0 flex-col border-l border-navy-700 bg-navy-900">
+    <aside className="flex h-full w-80 shrink-0 flex-col border-l border-navy-700 bg-navy-900/95">
       <div className="flex items-center justify-between border-b border-navy-700 px-4 py-3">
         <div className="flex items-center gap-2">
-          <span className={entry.accent}>
-            <Icon className="h-5 w-5" />
+          <span className={`grid h-8 w-8 place-items-center rounded-sm border border-navy-700 bg-paper-soft ${entry.accent}`}>
+            <Icon className="h-4 w-4" />
           </span>
-          <span className="text-sm font-semibold">{entry.label}</span>
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-slate-500">
+              Selected part
+            </p>
+            <span className="text-sm font-semibold">{entry.label}</span>
+          </div>
         </div>
         <button
           title="Delete component"
@@ -319,9 +328,8 @@ export function Inspector({ node, onChange, onDelete }: InspectorProps) {
           </div>
         )}
 
-        <div className="rounded-lg border border-navy-700 bg-navy-800/40 p-3">
+        <div className="rounded-md border border-navy-700 bg-paper-soft/70 p-3">
           <div className="mb-2 flex items-center gap-2 text-brand-cyan">
-            <Lightbulb className="h-4 w-4" />
             <span className="text-xs font-semibold uppercase tracking-wide">
               About {entry.label}
             </span>
@@ -350,9 +358,8 @@ function SwapPicker({
   const current = currentTechnology?.trim().toLowerCase();
 
   return (
-    <div className="rounded-lg border border-navy-700 bg-navy-800/40 p-3">
+    <div className="rounded-md border border-navy-700 bg-paper-soft/70 p-3">
       <div className="mb-2 flex items-center gap-2 text-brand-cyan">
-        <Repeat className="h-4 w-4" />
         <span className="text-xs font-semibold uppercase tracking-wide">
           Swap technology
         </span>
@@ -372,8 +379,8 @@ function SwapPicker({
               }
               className={`rounded-md px-2.5 py-1 text-xs font-medium transition ${
                 active
-                  ? "bg-gradient-brand text-white"
-                  : "border border-navy-700 text-slate-600 hover:border-brand-blue/50 hover:text-ink"
+                  ? "border border-brand-blue bg-brand-blue text-white"
+                  : "border border-navy-700 bg-navy-900 text-slate-600 hover:border-brand-blue/50 hover:text-ink"
               }`}
             >
               {o.name}

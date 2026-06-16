@@ -4,19 +4,14 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Plus,
-  LayoutTemplate,
   Upload,
   Trash2,
   ArrowRight,
   Boxes,
-  Sparkles,
+  HardDrive,
   KeyRound,
   ExternalLink,
-  PencilRuler,
-  Scale,
-  FileText,
   X,
-  HardDrive,
 } from "lucide-react";
 import { useAtlasStore, useHasHydrated } from "@/lib/store";
 import { BLUEPRINTS, BLUEPRINT_GROUPS } from "@/lib/blueprints";
@@ -56,37 +51,38 @@ export default function DashboardPage() {
 
   return (
     <main className="min-h-screen bg-gradient-dark">
-      <div className="mx-auto max-w-6xl px-6 py-16">
-        <header className="mb-12 flex flex-wrap items-end justify-between gap-6 border-b border-navy-700 pb-10">
-          <div>
-            <div className="eyebrow mb-3 flex items-center gap-2 text-brand-cyan">
-              <Boxes className="h-4 w-4" />
-              <span className="text-xs font-semibold uppercase">
-                System Atlas
-              </span>
+      <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-16">
+        <header className="mb-12 border-b border-navy-700 pb-10">
+          <div className="flex flex-wrap items-end justify-between gap-8">
+            <div className="max-w-3xl">
+              <div className="eyebrow mb-6 flex items-center gap-3 text-brand-cyan">
+                <Boxes className="h-5 w-5" />
+                <span className="text-sm font-semibold uppercase tracking-[0.34em]">
+                  System Atlas
+                </span>
+              </div>
+              <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl">
+                Your <span className="text-brand-cyan">architectures</span>
+              </h1>
+              <p className="mt-6 max-w-3xl text-2xl leading-relaxed text-slate-500 sm:text-3xl">
+                Turn product requirements into system architecture, trade-off
+                decisions, and implementation-ready design docs.
+              </p>
+              <p className="mt-8 inline-flex max-w-full items-center gap-2 rounded-full border border-navy-700 bg-navy-900/45 px-4 py-2 text-sm text-slate-500 sm:text-base">
+                <HardDrive className="h-4 w-4 shrink-0" />
+                <span>Stored in your browser. Export a project to keep or move it.</span>
+              </p>
             </div>
-            <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-              Your <span className="gradient-text">architectures</span>
-            </h1>
-            <p className="mt-4 max-w-xl text-lg leading-relaxed text-slate-500">
-              Turn product requirements into system architecture, trade-off
-              decisions, and implementation-ready design docs.
-            </p>
-            <p className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-navy-700 bg-navy-800/60 px-3 py-1 text-xs text-slate-500">
-              <HardDrive className="h-3.5 w-3.5" />
-              Stored in your browser. Export a project to keep or move it.
-            </p>
-          </div>
-          {hydrated && projects.length > 0 && (
-            <div className="flex flex-wrap gap-3">
-              <Button onClick={() => setNaming(true)}>
-                <Plus className="h-4 w-4" /> New architecture
+            <div className="flex w-full flex-wrap justify-start gap-2 lg:w-auto lg:justify-end">
+              <Button onClick={() => setNaming(true)} className="min-w-40">
+                New architecture
               </Button>
               <Button
                 variant="secondary"
                 onClick={() => setShowBlueprints(true)}
+                className="min-w-36"
               >
-                <LayoutTemplate className="h-4 w-4" /> From blueprint
+                From blueprint
               </Button>
               <Button
                 variant="secondary"
@@ -95,11 +91,10 @@ export default function DashboardPage() {
                 <Upload className="h-4 w-4" /> Import JSON
               </Button>
               <Button variant="secondary" onClick={() => setShowKey(true)}>
-                <Sparkles className="h-4 w-4" />
                 {geminiApiKey ? "AI connected" : "Connect AI"}
               </Button>
             </div>
-          )}
+          </div>
           <input
             ref={fileInputRef}
             type="file"
@@ -125,23 +120,20 @@ export default function DashboardPage() {
               <div className="h-7 w-56 rounded bg-navy-700/70" />
               <div className="h-4 w-full rounded bg-navy-700/50" />
               <div className="h-4 w-3/4 rounded bg-navy-700/50" />
-              <div className="mt-2 h-32 w-full rounded-xl bg-navy-700/30" />
+              <div className="mt-2 h-32 w-full rounded-md bg-navy-700/30" />
             </div>
           </Panel>
         ) : projects.length === 0 ? (
           <Panel className="overflow-hidden">
             {/* Lead with the output: a real generated architecture */}
             <div className="border-b border-navy-700 p-6 sm:p-8">
-              <div className="eyebrow mb-3 flex items-center gap-2 text-brand-cyan">
-                <Sparkles className="h-4 w-4" />
-                <span className="text-xs font-semibold uppercase tracking-wide">
-                  Example output
-                </span>
-              </div>
-              <h2 className="text-2xl font-semibold tracking-tight">
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-cyan">
+                Example output
+              </p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight">
                 From a one-paragraph brief to a design you can defend
               </h2>
-              <p className="mt-2 max-w-2xl text-slate-500">
+              <p className="mt-2 max-w-2xl text-slate-600">
                 Here is a URL shortener System Atlas generated: a typed
                 component diagram, the trade-off behind each choice, and a
                 decision record. Yours exports to Markdown, JSON, or PNG.
@@ -153,32 +145,30 @@ export default function DashboardPage() {
 
             {/* How it works + start */}
             <div className="p-6 sm:p-8">
-              <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                 How it works
               </p>
               <ol className="grid gap-4 text-left sm:grid-cols-3">
                 {ONBOARDING_STEPS.map((step, i) => {
-                  const Icon = step.icon;
                   return (
                     <li
                       key={step.title}
-                      className="rounded-xl border border-navy-700 bg-navy-900/40 p-4"
+                      className="rounded-md border border-navy-700 bg-navy-900 p-4"
                     >
                       <div className="mb-2 flex items-center gap-2">
-                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-brand text-xs font-semibold text-white">
+                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm bg-brand-blue font-mono text-xs font-semibold text-white">
                           {i + 1}
                         </span>
-                        <Icon className="h-4 w-4 text-brand-cyan" />
                         <span className="font-semibold">{step.title}</span>
                       </div>
-                      <p className="text-sm text-slate-500">{step.body}</p>
+                      <p className="text-sm text-slate-600">{step.body}</p>
                     </li>
                   );
                 })}
               </ol>
 
-              <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-                <div className="flex items-center gap-3 text-sm text-slate-500">
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-slate-500">
                   <button
                     onClick={() => setShowBlueprints(true)}
                     className="transition hover:text-ink"
@@ -208,7 +198,7 @@ export default function DashboardPage() {
                   onClick={() => setNaming(true)}
                   className="px-6 py-3 text-base"
                 >
-                  <Plus className="h-5 w-5" /> Start with your own brief
+                  Start with your own brief
                 </Button>
               </div>
             </div>
@@ -340,22 +330,18 @@ export default function DashboardPage() {
 }
 
 const ONBOARDING_STEPS: {
-  icon: typeof PencilRuler;
   title: string;
   body: string;
 }[] = [
   {
-    icon: PencilRuler,
     title: "Design",
     body: "Drop components on a canvas or start from a reference blueprint.",
   },
   {
-    icon: Scale,
     title: "Decide",
     body: "Weigh trade-offs with rules of thumb and side-by-side comparisons.",
   },
   {
-    icon: FileText,
     title: "Document",
     body: "Export a Markdown, JSON, or PNG design doc to share.",
   },
@@ -376,8 +362,7 @@ function GeminiKeyModal({ onClose }: { onClose: () => void }) {
       <Panel className="w-full max-w-md bg-navy-900 p-6">
         <div onClick={(e) => e.stopPropagation()}>
           <div className="mb-1 flex items-center gap-2 text-brand-cyan">
-            <Sparkles className="h-5 w-5" />
-            <span className="text-sm font-semibold uppercase tracking-wide">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em]">
               AI assistant
             </span>
           </div>

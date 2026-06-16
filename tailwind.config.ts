@@ -17,11 +17,11 @@ const config: Config = {
       colors: {
         // surfaces & lines (light)
         navy: {
-          950: "#ffffff",
-          900: "#ffffff", // pure white surfaces: sidebars, inputs, modals
-          800: "#f1eee7", // faint warm tint: cards, node bodies, hovers
-          700: "#e4dfd4", // hairline borders, chips, secondary buttons
-          600: "#d6d0c2", // hover borders
+          950: "#fffdf8",
+          900: "#fffdf8", // paper-white surfaces: sidebars, inputs, modals
+          800: "#f3efe6", // faint warm tint: cards, node bodies, hovers
+          700: "#ded7c9", // hairline borders, chips, secondary buttons
+          600: "#cfc5b3", // hover borders
         },
         // restrained earth-tone accent
         brand: {
@@ -39,11 +39,12 @@ const config: Config = {
         },
       },
       backgroundImage: {
-        "gradient-brand": "linear-gradient(135deg, #1f4d44 0%, #2f6b5e 100%)",
+        "gradient-brand": "linear-gradient(135deg, #1f4d44 0%, #345f54 58%, #8a6f3b 100%)",
         "gradient-dark": "linear-gradient(180deg, #f7f5f0 0%, #efeae1 100%)",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["IBM Plex Sans", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "ui-monospace", "monospace"],
       },
     },
   },

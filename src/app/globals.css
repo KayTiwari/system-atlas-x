@@ -2,12 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 
 :root {
   --paper: #f7f5f0;
+  --paper-soft: #efeae1;
   --ink: #1c1b19;
+  --muted: #6b665d;
   --accent: #1f4d44;
+  --line: #ded7c9;
+  --grid: rgba(31, 77, 68, 0.06);
 }
 
 html,
@@ -16,9 +20,13 @@ body {
 }
 
 body {
-  background-color: var(--paper);
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    var(--paper);
+  background-size: 32px 32px;
   color: var(--ink);
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -35,10 +43,29 @@ body {
 
 @layer utilities {
   .gradient-text {
-    background: linear-gradient(135deg, #1f4d44 0%, #2f6b5e 100%);
+    background: linear-gradient(135deg, #1c1b19 0%, #1f4d44 65%, #8a6f3b 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .atlas-grid-bg {
+    background:
+      linear-gradient(rgba(31, 77, 68, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(31, 77, 68, 0.055) 1px, transparent 1px),
+      radial-gradient(circle at 1px 1px, rgba(28, 27, 25, 0.12) 1px, transparent 0),
+      #f7f5f0;
+    background-size: 32px 32px, 32px 32px, 96px 96px, auto;
+  }
+
+  .atlas-rule {
+    background-image: repeating-linear-gradient(
+      90deg,
+      rgba(31, 77, 68, 0.24) 0,
+      rgba(31, 77, 68, 0.24) 1px,
+      transparent 1px,
+      transparent 12px
+    );
   }
 }
 
@@ -48,7 +75,7 @@ body {
 }
 
 .react-flow__edge-path {
-  stroke: #c7c0b2;
+  stroke: #b9ad99;
   stroke-width: 2;
 }
 
@@ -59,26 +86,34 @@ body {
 
 .react-flow__handle {
   background: #1f4d44;
-  border: none;
+  border: 2px solid #f7f5f0;
   width: 8px;
   height: 8px;
 }
 
 .react-flow__controls {
-  box-shadow: 0 1px 3px rgba(28, 27, 25, 0.12);
-  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(28, 27, 25, 0.08);
+  border: 1px solid #ded7c9;
+  border-radius: 6px;
   overflow: hidden;
 }
 
 .react-flow__controls-button {
-  background: #ffffff;
+  background: #fffdf8;
   border-bottom: 1px solid #e4dfd4;
   color: #1c1b19;
   fill: #1c1b19;
 }
 
 .react-flow__controls-button:hover {
-  background: #f1eee7;
+  background: #efeae1;
+}
+
+.react-flow__minimap {
+  border: 1px solid #ded7c9;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(28, 27, 25, 0.08);
 }
 
 /* thin scrollbars for side panels */

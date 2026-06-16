@@ -10,13 +10,6 @@ import {
 } from "@xyflow/react";
 import {
   ArrowLeft,
-  Network,
-  ClipboardList,
-  ShieldAlert,
-  Scale,
-  FileText,
-  Download,
-  Sparkles,
   Loader2,
 } from "lucide-react";
 import { useAtlasStore, useHasHydrated } from "@/lib/store";
@@ -50,14 +43,14 @@ type Tab =
   | "decisions"
   | "export";
 
-const TABS: { id: Tab; label: string; icon: typeof Network; hint: string }[] = [
-  { id: "canvas", label: "Canvas", icon: Network, hint: "Arrange and connect components" },
-  { id: "brief", label: "Brief", icon: ClipboardList, hint: "Describe what you're building" },
-  { id: "review", label: "Review", icon: ShieldAlert, hint: "Catch gaps and missing pieces" },
-  { id: "tradeoffs", label: "Tradeoffs", icon: Scale, hint: "Compare technology choices" },
-  { id: "assist", label: "Assist", icon: Sparkles, hint: "AI review of your design" },
-  { id: "decisions", label: "Decisions", icon: FileText, hint: "Recorded design decisions (ADRs)" },
-  { id: "export", label: "Export", icon: Download, hint: "JSON, Markdown, or PNG design doc" },
+const TABS: { id: Tab; label: string; hint: string }[] = [
+  { id: "canvas", label: "Canvas", hint: "Arrange and connect components" },
+  { id: "brief", label: "Brief", hint: "Describe what you're building" },
+  { id: "review", label: "Review", hint: "Catch gaps and missing pieces" },
+  { id: "tradeoffs", label: "Tradeoffs", hint: "Compare technology choices" },
+  { id: "assist", label: "Assist", hint: "AI review of your design" },
+  { id: "decisions", label: "Decisions", hint: "Recorded design decisions (ADRs)" },
+  { id: "export", label: "Export", hint: "JSON, Markdown, or PNG design doc" },
 ];
 
 export default function ProjectPage({
@@ -168,7 +161,7 @@ export default function ProjectPage({
 
   if (!hydrated) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-gradient-dark">
+      <main className="atlas-grid-bg flex min-h-screen items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-slate-500" />
       </main>
     );
@@ -176,7 +169,7 @@ export default function ProjectPage({
 
   if (!project) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-dark">
+      <main className="atlas-grid-bg flex min-h-screen flex-col items-center justify-center gap-4">
         <p className="text-slate-600">This architecture could not be found.</p>
         <button
           onClick={() => router.push("/")}
@@ -191,40 +184,43 @@ export default function ProjectPage({
   const selectedNode = nodes.find((n) => n.id === selectedNodeId) ?? null;
 
   return (
-    <main className="flex h-screen flex-col bg-gradient-dark">
+    <main className="atlas-grid-bg flex h-screen flex-col">
       {/* Top bar */}
-      <header className="flex items-center justify-between border-b border-navy-700 bg-navy-900 px-4 py-3">
-        <div className="flex items-center gap-3">
+      <header className="flex min-h-[72px] items-center justify-between gap-4 border-b border-navy-700 bg-navy-900/95 px-4 py-3 backdrop-blur">
+        <div className="flex min-w-0 items-center gap-3">
           <button
             onClick={() => router.push("/")}
-            className="rounded-md p-1.5 text-slate-500 hover:bg-navy-800 hover:text-ink"
+            className="rounded-md border border-navy-700 p-2 text-slate-600 hover:border-brand-blue/50 hover:bg-paper-soft hover:text-ink"
             title="Back to dashboard"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <div>
-            <h1 className="text-sm font-semibold leading-tight">
+          <div className="min-w-0">
+            <h1 className="truncate text-sm font-semibold leading-tight">
               {project.name}
             </h1>
-            <p className="text-xs text-slate-500">
+            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">
               {nodes.length} components · {project.decisions.length} decisions
             </p>
           </div>
           <Chip label={project.status} />
         </div>
-        <nav className="flex gap-1">
-          {TABS.map(({ id: t, label, icon: Icon, hint }) => (
+        <nav className="thin-scroll flex max-w-[62vw] gap-1 overflow-x-auto rounded-md border border-navy-700 bg-paper-soft p-1">
+          {TABS.map(({ id: t, label, hint }, index) => (
             <button
               key={t}
               onClick={() => setTab(t)}
               title={hint}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+              className={`flex shrink-0 items-center gap-2 rounded px-3 py-2 text-sm font-semibold transition ${
                 tab === t
-                  ? "bg-navy-700 text-ink"
-                  : "text-slate-500 hover:bg-navy-800 hover:text-ink"
+                  ? "bg-navy-900 text-ink shadow-sm"
+                  : "text-slate-600 hover:bg-navy-900/70 hover:text-ink"
               }`}
             >
-              <Icon className="h-4 w-4" /> {label}
+              <span className="font-mono text-[10px] text-brand-cyan">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              {label}
             </button>
           ))}
         </nav>

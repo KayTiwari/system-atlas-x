@@ -83,7 +83,7 @@ export function ExportDialog({ project }: { project: Project }) {
         </p>
         <div
           ref={previewRef}
-          className="h-[360px] w-full overflow-hidden rounded-xl border border-navy-700 bg-navy-900"
+          className="h-[360px] w-full overflow-hidden rounded-md border border-navy-700 bg-navy-900"
         >
           <ReactFlow
             nodes={project.nodes}
