@@ -60,11 +60,14 @@ export type ArchitectureFlowEdge = Edge<ArchitectureEdgeData>;
 /** Decision categories the Tradeoff Engine reasons about. */
 export type DecisionCategory =
   | "database"
+  | "sqlDatabase"
+  | "noSqlDatabase"
   | "cache"
   | "queue"
   | "compute"
   | "api"
   | "storage"
+  | "objectStorage"
   | "search"
   | "auth"
   | "vectorStore"

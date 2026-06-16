@@ -1,4 +1,5 @@
 import { ChevronRight } from "lucide-react";
+import { getTechLogo } from "@/lib/techLogos";
 
 /**
  * A static, hand-built sample of what System Atlas produces from a one-paragraph
@@ -78,10 +79,34 @@ function Node({
   name: string;
   tech: string;
 }) {
+  const logo = getTechLogo(tech);
   return (
     <div className="flex w-36 shrink-0 items-center gap-2.5 rounded-md border border-navy-700 bg-navy-900 px-3 py-2 shadow-sm">
-      <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-sm border border-navy-700 bg-paper-soft font-mono text-[10px] font-semibold ${accent}`}>
-        {code}
+      <span
+        className={`grid h-7 w-7 shrink-0 place-items-center rounded-sm border border-navy-700 bg-paper-soft font-mono text-[10px] font-semibold ${
+          logo ? "" : accent
+        }`}
+      >
+        {logo?.kind === "img" ? (
+          <img
+            src={logo.src}
+            alt={`${logo.title} logo`}
+            className="h-4 w-4 object-contain"
+          />
+        ) : logo ? (
+          <svg
+            role="img"
+            aria-label={`${logo.title} logo`}
+            viewBox="0 0 24 24"
+            fill={logo.hex}
+            className="h-4 w-4"
+          >
+            <title>{logo.title}</title>
+            <path d={logo.path} />
+          </svg>
+        ) : (
+          code
+        )}
       </span>
       <div className="min-w-0">
         <p className="truncate text-xs font-semibold text-ink">{name}</p>

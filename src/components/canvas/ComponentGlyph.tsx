@@ -20,6 +20,15 @@ export function ComponentGlyph({
 }) {
   const logo = getTechLogo(technology);
   if (logo) {
+    if (logo.kind === "img") {
+      return (
+        <img
+          src={logo.src}
+          alt={`${logo.title} logo`}
+          className={`${className} object-contain`}
+        />
+      );
+    }
     return (
       <svg
         role="img"

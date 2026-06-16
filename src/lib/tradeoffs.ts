@@ -64,11 +64,11 @@ function s(
 }
 
 export const TECHNOLOGY_OPTIONS: TechnologyOption[] = [
-  // ---- Database ----
+  // ---- SQL database ----
   {
     id: "postgres",
     name: "Postgres",
-    category: "database",
+    category: "sqlDatabase",
     nodeType: "sql_database",
     scores: s(4, 3, 4, 5, 3, 5, 4, 4, 4),
     bestFor: ["Relational data", "Transactions", "Reporting", "Audit logs"],
@@ -80,9 +80,39 @@ export const TECHNOLOGY_OPTIONS: TechnologyOption[] = [
     ],
   },
   {
+    id: "mysql",
+    name: "MySQL",
+    category: "sqlDatabase",
+    nodeType: "sql_database",
+    scores: s(4, 4, 4, 4, 3, 5, 4, 4, 4),
+    bestFor: ["Relational data", "Common web workloads", "Managed cloud SQL"],
+    avoidWhen: ["Heavy analytical queries", "Advanced Postgres-specific features"],
+    chooseWhen: "Your team knows MySQL or the ecosystem already standardizes on it.",
+    tradeoffs: [
+      "Mature, familiar, and widely hosted.",
+      "Less feature-rich than Postgres for complex data modeling.",
+    ],
+  },
+  {
+    id: "sqlite",
+    name: "SQLite",
+    category: "sqlDatabase",
+    nodeType: "sql_database",
+    scores: s(5, 1, 5, 4, 5, 5, 5, 4, 2),
+    bestFor: ["Embedded apps", "Local-first prototypes", "Small single-writer systems"],
+    avoidWhen: ["Multi-writer backend services", "High-concurrency production APIs"],
+    chooseWhen: "The database lives with one app instance and simplicity matters most.",
+    tradeoffs: [
+      "Tiny operational footprint.",
+      "Not a fit for horizontally scaled write-heavy services.",
+    ],
+  },
+
+  // ---- NoSQL database ----
+  {
     id: "mongodb",
     name: "MongoDB",
-    category: "database",
+    category: "noSqlDatabase",
     nodeType: "nosql_database",
     scores: s(4, 4, 3, 3, 3, 4, 3, 4, 3),
     bestFor: ["Document-shaped data", "Flexible/evolving schemas"],
@@ -96,7 +126,7 @@ export const TECHNOLOGY_OPTIONS: TechnologyOption[] = [
   {
     id: "dynamodb",
     name: "DynamoDB",
-    category: "database",
+    category: "noSqlDatabase",
     nodeType: "nosql_database",
     scores: s(2, 5, 4, 4, 4, 3, 2, 5, 4),
     bestFor: ["Massive scale", "Predictable access patterns"],
@@ -110,7 +140,7 @@ export const TECHNOLOGY_OPTIONS: TechnologyOption[] = [
   {
     id: "firebase",
     name: "Firebase",
-    category: "database",
+    category: "noSqlDatabase",
     nodeType: "nosql_database",
     scores: s(5, 3, 3, 3, 5, 3, 1, 4, 2),
     bestFor: ["Fast MVPs", "Realtime client sync"],
@@ -247,39 +277,56 @@ export const TECHNOLOGY_OPTIONS: TechnologyOption[] = [
     tradeoffs: ["Fast and strongly typed.", "Less browser-friendly tooling."],
   },
 
-  // ---- File storage ----
+  // ---- Object storage ----
   {
-    id: "object-storage",
-    name: "Object storage",
-    category: "storage",
+    id: "s3",
+    name: "Amazon S3",
+    category: "objectStorage",
+    nodeType: "object_storage",
     scores: s(4, 5, 5, 4, 4, 4, 3, 4, 4),
     bestFor: ["Large files", "Cheap durable storage at scale"],
     avoidWhen: ["Tiny transactional records"],
-    chooseWhen: "You store files, media, or documents.",
+    chooseWhen: "You are on AWS or need the default object-store baseline.",
     tradeoffs: [
-      "Cheap, scalable, durable.",
+      "Cheap, scalable, durable, and deeply integrated with AWS.",
       "Needs metadata in the DB and signed-URL access control.",
     ],
   },
   {
-    id: "db-blobs",
-    name: "Database blobs",
-    category: "storage",
-    scores: s(5, 2, 2, 5, 4, 5, 4, 3, 4),
-    bestFor: ["Tiny files", "Transactional simplicity"],
-    avoidWhen: ["Large or many files"],
-    chooseWhen: "Files are tiny and must be transactional.",
-    tradeoffs: ["Simple, transactional.", "Bloats the DB and scales poorly."],
+    id: "gcs",
+    name: "Google Cloud Storage",
+    category: "objectStorage",
+    nodeType: "object_storage",
+    scores: s(4, 5, 5, 4, 4, 4, 3, 4, 4),
+    bestFor: ["Large files", "GCP workloads", "Data lake inputs"],
+    avoidWhen: ["AWS-first stacks", "Azure-first enterprise stacks"],
+    chooseWhen: "The rest of your platform is already on Google Cloud.",
+    tradeoffs: [
+      "Strong managed object storage with GCP integration.",
+      "Cloud-platform lock-in still applies.",
+    ],
   },
   {
-    id: "third-party-docs",
-    name: "Third-party storage",
-    category: "storage",
-    scores: s(4, 4, 3, 4, 5, 3, 1, 4, 5),
-    bestFor: ["Compliance-heavy workflows", "E-sign, previews"],
-    avoidWhen: ["Avoiding vendor lock-in", "Cost sensitivity"],
-    chooseWhen: "You need compliance features out of the box.",
-    tradeoffs: ["Offloads compliance.", "Vendor lock-in and cost."],
+    id: "azure-blob",
+    name: "Azure Blob Storage",
+    category: "objectStorage",
+    nodeType: "object_storage",
+    scores: s(4, 5, 4, 4, 4, 3, 2, 4, 5),
+    bestFor: ["Enterprise files", "Azure workloads", "Compliance-heavy storage"],
+    avoidWhen: ["Avoiding Azure lock-in"],
+    chooseWhen: "You are already on Azure or need its enterprise controls.",
+    tradeoffs: ["Good enterprise integration.", "Less portable across clouds."],
+  },
+  {
+    id: "cloudflare-r2",
+    name: "Cloudflare R2",
+    category: "objectStorage",
+    nodeType: "object_storage",
+    scores: s(4, 4, 5, 4, 4, 3, 3, 5, 3),
+    bestFor: ["Public assets", "Egress-sensitive workloads", "Edge-adjacent files"],
+    avoidWhen: ["Deep AWS/GCP/Azure native integrations are required"],
+    chooseWhen: "Egress cost and edge delivery matter more than cloud-native hooks.",
+    tradeoffs: ["Low egress cost.", "Smaller ecosystem than the major cloud stores."],
   },
 
   // ---- Search ----
@@ -391,11 +438,14 @@ export function optionById(id: string) {
 
 export const CATEGORY_LABELS: Record<DecisionCategory, string> = {
   database: "Database",
+  sqlDatabase: "SQL database",
+  noSqlDatabase: "NoSQL database",
   cache: "Cache",
   queue: "Async / Queue",
   compute: "Compute",
   api: "API style",
   storage: "File storage",
+  objectStorage: "Object storage",
   search: "Search",
   auth: "Authentication",
   vectorStore: "Vector store",
@@ -413,6 +463,20 @@ export const RULES_OF_THUMB: Record<
       "Use DynamoDB when you know your access patterns and need huge scale.",
     ],
     avoid: ["Don't reach for NoSQL just to dodge schema discipline."],
+  },
+  sqlDatabase: {
+    use: [
+      "Use SQL when data has relationships, transactions, reporting, or audit requirements.",
+      "Postgres is the safest default unless your team or platform has a strong MySQL reason.",
+    ],
+    avoid: ["Avoid SQL only when the access patterns are simple, massive, and known upfront."],
+  },
+  noSqlDatabase: {
+    use: [
+      "Use NoSQL for document/key-value shapes with known access patterns and high scale needs.",
+      "DynamoDB fits predictable access patterns; MongoDB fits document-shaped data.",
+    ],
+    avoid: ["Don't use NoSQL for heavily relational workflows that need joins and transactions."],
   },
   cache: {
     use: [
@@ -449,6 +513,13 @@ export const RULES_OF_THUMB: Record<
   storage: {
     use: ["Store large files in object storage; keep metadata + ACLs in the DB."],
     avoid: ["Don't store large files as database blobs."],
+  },
+  objectStorage: {
+    use: [
+      "Use S3/GCS/Azure Blob/R2 for files, media, documents, backups, and generated artifacts.",
+      "Keep metadata, ownership, and access rules in the database.",
+    ],
+    avoid: ["Don't put large files in SQL/NoSQL records unless they are tiny and truly transactional."],
   },
   search: {
     use: [

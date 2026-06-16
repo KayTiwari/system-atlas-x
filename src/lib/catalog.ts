@@ -158,7 +158,7 @@ export const CATALOG: Record<ArchitectureNodeType, CatalogEntry> = {
     group: "Data",
     icon: Database,
     accent: "text-blue-400",
-    decisionCategory: "database",
+    decisionCategory: "sqlDatabase",
     defaultTechnology: "Postgres",
     purpose: "Relational store for structured, transactional data.",
     whenToUse: [
@@ -177,7 +177,7 @@ export const CATALOG: Record<ArchitectureNodeType, CatalogEntry> = {
     group: "Data",
     icon: Database,
     accent: "text-blue-400",
-    decisionCategory: "database",
+    decisionCategory: "noSqlDatabase",
     defaultTechnology: "DynamoDB",
     purpose: "Non-relational store optimized for scale and flexible schemas.",
     whenToUse: [
@@ -196,7 +196,7 @@ export const CATALOG: Record<ArchitectureNodeType, CatalogEntry> = {
     group: "Data",
     icon: HardDrive,
     accent: "text-cyan-400",
-    decisionCategory: "storage",
+    decisionCategory: "objectStorage",
     defaultTechnology: "S3",
     purpose: "Cheap, scalable storage for large files and blobs.",
     whenToUse: ["File uploads, images, documents, backups"],

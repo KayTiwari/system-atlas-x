@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Azure Blob Storage">
+  <rect width="64" height="64" rx="12" fill="#0078d4"/>
+  <path fill="#fff" d="M17 22h30v8H17zM17 34h30v8H17z" opacity=".94"/>
+  <path fill="#9cdcfe" d="M17 22h9v20h-9zM38 22h9v20h-9z"/>
+  <path fill="#fff" d="M22 47h20v4H22z" opacity=".8"/>
+</svg>

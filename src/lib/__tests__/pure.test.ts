@@ -9,6 +9,8 @@ import { generateSkeleton } from "../skeleton";
 import { lintArchitecture } from "../linter";
 import { recommend } from "../decisionRules";
 import { defaultNodeData } from "../catalog";
+import { optionsForCategory } from "../tradeoffs";
+import { getTechLogo } from "../techLogos";
 
 function brief(over: Partial<ArchitectureBrief> = {}): ArchitectureBrief {
   return { ...emptyBrief(), ...over };
@@ -135,14 +137,47 @@ describe("recommend", () => {
         coreFlows: ["Checkout and payment via Stripe"],
       })
     );
-    const db = recs.find((r) => r.category === "database");
+    const db = recs.find((r) => r.category === "sqlDatabase");
     expect(db?.recommendedOptionId).toBe("postgres");
   });
 
   it("always covers the core decision categories", () => {
     const cats = recommend(brief()).map((r) => r.category);
-    expect(cats).toContain("database");
+    expect(cats).toContain("sqlDatabase");
     expect(cats).toContain("compute");
     expect(cats).toContain("api");
+  });
+});
+
+describe("technology options", () => {
+  it("keeps SQL, NoSQL, and object storage options in their matching categories", () => {
+    const sql = optionsForCategory("sqlDatabase").map((o) => o.name);
+    const noSql = optionsForCategory("noSqlDatabase").map((o) => o.name);
+    const objectStorage = optionsForCategory("objectStorage").map((o) => o.name);
+
+    expect(sql).toEqual(expect.arrayContaining(["Postgres", "MySQL", "SQLite"]));
+    expect(sql).not.toEqual(expect.arrayContaining(["MongoDB", "DynamoDB", "Firebase"]));
+
+    expect(noSql).toEqual(expect.arrayContaining(["MongoDB", "DynamoDB", "Firebase"]));
+    expect(noSql).not.toEqual(expect.arrayContaining(["Postgres", "MySQL", "SQLite"]));
+
+    expect(objectStorage).toEqual(
+      expect.arrayContaining([
+        "Amazon S3",
+        "Google Cloud Storage",
+        "Azure Blob Storage",
+        "Cloudflare R2",
+      ])
+    );
+    expect(objectStorage).not.toContain("Database blobs");
+  });
+
+  it("has logos for SQL, NoSQL, and object storage technology options", () => {
+    const categories = ["sqlDatabase", "noSqlDatabase", "objectStorage"] as const;
+    for (const category of categories) {
+      for (const option of optionsForCategory(category)) {
+        expect(getTechLogo(option.name), `${option.name} should have a logo`).not.toBeNull();
+      }
+    }
   });
 });

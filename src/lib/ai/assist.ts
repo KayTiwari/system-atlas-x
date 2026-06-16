@@ -23,11 +23,14 @@ import {
 const SEVERITIES: ReviewSeverity[] = ["info", "warning", "critical"];
 const CATEGORIES: DecisionCategory[] = [
   "database",
+  "sqlDatabase",
+  "noSqlDatabase",
   "cache",
   "queue",
   "compute",
   "api",
   "storage",
+  "objectStorage",
   "search",
   "auth",
   "vectorStore",
@@ -133,7 +136,7 @@ Respond ONLY with JSON of this exact shape:
       "title": "short imperative title",
       "description": "what the issue/opportunity is",
       "recommendation": "the concrete action to take",
-      "category": one of ["database","cache","queue","compute","api","storage","search","auth","vectorStore","observability"] or null if not tied to a technology choice
+      "category": one of ["database","sqlDatabase","noSqlDatabase","cache","queue","compute","api","storage","objectStorage","search","auth","vectorStore","observability"] or null if not tied to a technology choice
     }
   ]
 }

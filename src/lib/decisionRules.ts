@@ -32,7 +32,7 @@ export type DecisionRule = {
 export const DECISION_RULES: DecisionRule[] = [
   {
     id: "payments-need-transactions",
-    category: "database",
+    category: "sqlDatabase",
     condition: (c) => c.hasPayments,
     reason: "Payments need strong transactions and relational integrity.",
     boostOptionId: "postgres",
@@ -40,7 +40,7 @@ export const DECISION_RULES: DecisionRule[] = [
   },
   {
     id: "sensitive-data-consistency",
-    category: "database",
+    category: "sqlDatabase",
     condition: (c) => c.dataSensitivity === "high",
     reason: "Sensitive data benefits from a consistent, auditable relational store.",
     boostOptionId: "postgres",
@@ -48,7 +48,7 @@ export const DECISION_RULES: DecisionRule[] = [
   },
   {
     id: "high-traffic-scale-db",
-    category: "database",
+    category: "noSqlDatabase",
     condition: (c) => c.isHighTraffic,
     reason: "Very high traffic with known access patterns can favor a scalable key-value store.",
     boostOptionId: "dynamodb",
@@ -56,10 +56,10 @@ export const DECISION_RULES: DecisionRule[] = [
   },
   {
     id: "files-object-storage",
-    category: "storage",
+    category: "objectStorage",
     condition: (c) => c.hasFileUploads,
     reason: "Large files should live in object storage, not the application database.",
-    boostOptionId: "object-storage",
+    boostOptionId: "s3",
     boost: 1.5,
   },
   {
@@ -161,13 +161,14 @@ function baseScore(
 export function relevantCategories(
   ctx: ArchitectureContext
 ): DecisionCategory[] {
-  const set = new Set<DecisionCategory>(["database", "compute", "api"]);
+  const set = new Set<DecisionCategory>(["sqlDatabase", "compute", "api"]);
   set.add("cache");
   set.add("observability");
   if (ctx.hasFileUploads) {
-    set.add("storage");
+    set.add("objectStorage");
     set.add("queue");
   }
+  if (ctx.isHighTraffic) set.add("noSqlDatabase");
   if (ctx.isHighTraffic) set.add("queue");
   if (ctx.hasSearch) set.add("search");
   if (ctx.hasAI) set.add("vectorStore");
