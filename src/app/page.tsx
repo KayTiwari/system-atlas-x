@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Wand2,
+  Plus,
   LayoutTemplate,
   Upload,
   Trash2,
@@ -15,6 +15,8 @@ import {
   PencilRuler,
   Scale,
   FileText,
+  X,
+  HardDrive,
 } from "lucide-react";
 import { useAtlasStore, useHasHydrated } from "@/lib/store";
 import { BLUEPRINTS, BLUEPRINT_GROUPS } from "@/lib/blueprints";
@@ -69,11 +71,15 @@ export default function DashboardPage() {
               Turn product requirements into system architecture, trade-off
               decisions, and implementation-ready design docs.
             </p>
+            <p className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-navy-700 bg-navy-800/60 px-3 py-1 text-xs text-slate-500">
+              <HardDrive className="h-3.5 w-3.5" />
+              Stored in your browser. Export a project to keep or move it.
+            </p>
           </div>
           {hydrated && projects.length > 0 && (
             <div className="flex flex-wrap gap-3">
               <Button onClick={() => setNaming(true)}>
-                <Wand2 className="h-4 w-4" /> Design Wizard
+                <Plus className="h-4 w-4" /> New architecture
               </Button>
               <Button
                 variant="secondary"
@@ -155,7 +161,7 @@ export default function DashboardPage() {
 
               <div className="mt-8 flex flex-col items-center gap-3">
                 <Button onClick={() => setNaming(true)}>
-                  <Wand2 className="h-4 w-4" /> Start with the Design Wizard
+                  <Plus className="h-4 w-4" /> Start a new architecture
                 </Button>
                 <div className="flex items-center gap-3 text-sm text-slate-500">
                   <button
@@ -238,52 +244,59 @@ export default function DashboardPage() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-6"
           onClick={() => setShowBlueprints(false)}
         >
-          <Panel
-            className="max-h-[80vh] w-full max-w-2xl overflow-y-auto bg-navy-900 p-6 thin-scroll"
-            // stop the backdrop click from closing when interacting inside
-          >
+          <Panel className="flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden bg-navy-900">
             <div
+              className="flex min-h-0 flex-1 flex-col"
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 className="mb-1 text-xl font-bold">Start from a blueprint</h2>
-              <p className="mb-5 text-sm text-slate-500">
-                Load a reference architecture you can refine - swap any component
-                for an alternative from its inspector.
-              </p>
-              {BLUEPRINT_GROUPS.map((group) => {
-                const items = BLUEPRINTS.filter((t) => t.group === group);
-                if (items.length === 0) return null;
-                return (
-                  <div key={group} className="mb-5">
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                      {group === "Pattern"
-                        ? "Industry patterns"
-                        : "Product use cases"}
-                    </p>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      {items.map((t) => (
-                        <button
-                          key={t.id}
-                          onClick={() => {
-                            const id = createProject(t.build());
-                            router.push(`/project/${id}`);
-                          }}
-                          className="rounded-lg border border-navy-700 bg-navy-800/60 p-4 text-left transition hover:border-brand-blue/50"
-                        >
-                          <p className="font-semibold">{t.name}</p>
-                          <p className="mt-1 text-sm text-slate-500">
-                            {t.summary}
-                          </p>
-                        </button>
-                      ))}
+              <div className="flex items-start justify-between gap-4 border-b border-navy-700 p-6 pb-4">
+                <div>
+                  <h2 className="text-xl font-bold">Start from a blueprint</h2>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Load a reference architecture you can refine - swap any
+                    component for an alternative from its inspector.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowBlueprints(false)}
+                  title="Close"
+                  aria-label="Close"
+                  className="-mr-1 -mt-1 shrink-0 rounded-md p-2 text-slate-500 transition hover:bg-navy-800 hover:text-ink"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto p-6 thin-scroll">
+                {BLUEPRINT_GROUPS.map((group) => {
+                  const items = BLUEPRINTS.filter((t) => t.group === group);
+                  if (items.length === 0) return null;
+                  return (
+                    <div key={group} className="mb-5 last:mb-0">
+                      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                        {group === "Pattern"
+                          ? "Industry patterns"
+                          : "Product use cases"}
+                      </p>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {items.map((t) => (
+                          <button
+                            key={t.id}
+                            onClick={() => {
+                              const id = createProject(t.build());
+                              router.push(`/project/${id}`);
+                            }}
+                            className="rounded-lg border border-navy-700 bg-navy-800/60 p-4 text-left transition hover:border-brand-blue/50"
+                          >
+                            <p className="font-semibold">{t.name}</p>
+                            <p className="mt-1 text-sm text-slate-500">
+                              {t.summary}
+                            </p>
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-              <div className="mt-6 flex justify-end">
-                <Button variant="ghost" onClick={() => setShowBlueprints(false)}>
-                  Close
-                </Button>
+                  );
+                })}
               </div>
             </div>
           </Panel>
@@ -434,12 +447,16 @@ function NameModal({
       >
         <div onClick={(e) => e.stopPropagation()}>
           <div className="mb-1 flex items-center gap-2 text-brand-cyan">
-            <Wand2 className="h-5 w-5" />
+            <Plus className="h-5 w-5" />
             <span className="text-sm font-semibold uppercase tracking-wide">
-              Design Wizard
+              New architecture
             </span>
           </div>
-          <h2 className="mb-4 text-xl font-bold">Name your architecture</h2>
+          <h2 className="mb-1 text-xl font-bold">Name your architecture</h2>
+          <p className="mb-4 text-sm text-slate-500">
+            You will land in the Brief next - answer a few questions and Atlas
+            generates a starting diagram.
+          </p>
           <input
             autoFocus
             value={name}
@@ -456,7 +473,7 @@ function NameModal({
               Cancel
             </Button>
             <Button disabled={!name.trim()} onClick={submit}>
-              <Wand2 className="h-4 w-4" /> Create
+              Continue to Brief <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
         </div>

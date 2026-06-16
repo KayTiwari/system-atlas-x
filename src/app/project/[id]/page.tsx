@@ -49,14 +49,14 @@ type Tab =
   | "decisions"
   | "export";
 
-const TABS: { id: Tab; label: string; icon: typeof Network }[] = [
-  { id: "canvas", label: "Canvas", icon: Network },
-  { id: "brief", label: "Brief", icon: ClipboardList },
-  { id: "review", label: "Review", icon: ShieldAlert },
-  { id: "tradeoffs", label: "Tradeoffs", icon: Scale },
-  { id: "assist", label: "Assist", icon: Sparkles },
-  { id: "decisions", label: "Decisions", icon: FileText },
-  { id: "export", label: "Export", icon: Download },
+const TABS: { id: Tab; label: string; icon: typeof Network; hint: string }[] = [
+  { id: "canvas", label: "Canvas", icon: Network, hint: "Arrange and connect components" },
+  { id: "brief", label: "Brief", icon: ClipboardList, hint: "Describe what you're building" },
+  { id: "review", label: "Review", icon: ShieldAlert, hint: "Catch gaps and missing pieces" },
+  { id: "tradeoffs", label: "Tradeoffs", icon: Scale, hint: "Compare technology choices" },
+  { id: "assist", label: "Assist", icon: Sparkles, hint: "AI review of your design" },
+  { id: "decisions", label: "Decisions", icon: FileText, hint: "Recorded design decisions (ADRs)" },
+  { id: "export", label: "Export", icon: Download, hint: "JSON, Markdown, or PNG design doc" },
 ];
 
 export default function ProjectPage({
@@ -71,11 +71,18 @@ export default function ProjectPage({
   const project = useAtlasStore((s) => s.projects.find((p) => p.id === id));
   const setGraph = useAtlasStore((s) => s.setGraph);
 
-  const [tab, setTab] = useState<Tab>("canvas");
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-
   // React Flow owns the live graph during editing; seeded once from the store.
   const seed = useAtlasStore.getState().projects.find((p) => p.id === id);
+
+  // A brand-new, empty project opens straight into the Brief (the real starting
+  // point); anything that already has a diagram opens on the Canvas.
+  const [tab, setTab] = useState<Tab>(
+    seed && seed.nodes.length === 0 && !seed.brief.productGoal.trim()
+      ? "brief"
+      : "canvas"
+  );
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+
   const [nodes, setNodes, onNodesChange] = useNodesState<ArchitectureFlowNode>(
     seed?.nodes ?? []
   );
@@ -205,10 +212,11 @@ export default function ProjectPage({
           <Chip label={project.status} />
         </div>
         <nav className="flex gap-1">
-          {TABS.map(({ id: t, label, icon: Icon }) => (
+          {TABS.map(({ id: t, label, icon: Icon, hint }) => (
             <button
               key={t}
               onClick={() => setTab(t)}
+              title={hint}
               className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition ${
                 tab === t
                   ? "bg-navy-700 text-ink"

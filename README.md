@@ -2,9 +2,11 @@
 
 **Live demo: [system-atlas-x.vercel.app](https://system-atlas-x.vercel.app)**
 
-A guided architecture-planning workspace. System Atlas helps engineering teams turn
-product requirements into system architecture, trade-off decisions, and
-implementation-ready design docs.
+**From product brief to design doc in 20 minutes.** A guided architecture workbench:
+answer a structured brief, get a starting architecture, weigh the trade-offs behind each
+component, and export a design doc your team can build from. The pipeline (Brief →
+Skeleton → Review → Tradeoffs → Decisions → Export) is the product; the canvas is one
+view of the model.
 
 ![System Atlas canvas](docs/screenshot.png)
 
@@ -66,7 +68,8 @@ single source of truth across skeleton, review, and recommendations.
 
 ## Using the app
 
-1. **Design Wizard** (or pick a blueprint) to create a project.
+1. **New architecture** (or pick a blueprint) to create a project. A blank one opens
+   straight into the Brief.
 2. Fill the **Brief**, then **Generate skeleton**.
 3. On the **Canvas**, drag components from the palette, connect them, and click any node to
    edit its reasoning in the inspector. Use **Swap technology** to try alternatives.

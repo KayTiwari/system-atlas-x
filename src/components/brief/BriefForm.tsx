@@ -27,6 +27,9 @@ export function BriefForm({
   const set = (patch: Partial<ArchitectureBrief>) =>
     updateBrief(projectId, { ...brief, ...patch });
 
+  const canGenerate =
+    brief.productGoal.trim().length > 0 && brief.coreFlows.length > 0;
+
   return (
     <div className="space-y-6">
       <div>
@@ -43,24 +46,28 @@ export function BriefForm({
           value={brief.productGoal}
           textarea
           placeholder="e.g. A customer-facing document upload and review platform"
+          example="A claims platform where insurance customers upload documents and reviewers approve them"
           onChange={(v) => set({ productGoal: v })}
         />
         <Text
           label="Who are the users?"
           value={brief.users}
           placeholder="Internal, external customers, admins, partner API…"
+          example="External policyholders, internal claims reviewers, a partner API"
           onChange={(v) => set({ users: v })}
         />
         <List
           label="Core user flows"
           values={brief.coreFlows}
           placeholder="e.g. Customer uploads a document"
+          example="Customer uploads a claim · Reviewer approves or rejects · Customer checks status"
           onChange={(v) => set({ coreFlows: v })}
         />
         <Text
           label="Traffic assumptions"
           value={brief.trafficAssumptions}
           placeholder="Users/day, requests/sec, peak traffic"
+          example="~5k daily users, ~50 req/s average, ~300 req/s at peak"
           onChange={(v) => set({ trafficAssumptions: v })}
         />
         <div className="grid gap-5 sm:grid-cols-2">
@@ -89,6 +96,7 @@ export function BriefForm({
           label="Latency needs"
           value={brief.latencyNeeds}
           placeholder="What needs to be fast?"
+          example="Document list loads under 300ms; uploads can process asynchronously"
           onChange={(v) => set({ latencyNeeds: v })}
         />
         <List
@@ -105,9 +113,18 @@ export function BriefForm({
         />
       </Panel>
 
-      <div className="flex justify-end">
-        <Button onClick={onGenerateSkeleton}>
-          <Sparkles className="h-4 w-4" /> Generate skeleton
+      <div className="sticky bottom-0 flex flex-col gap-3 border-t border-navy-700 bg-navy-900/95 py-4 backdrop-blur sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-slate-500">
+          {canGenerate
+            ? "Atlas turns this brief into a starting diagram you can refine."
+            : "Add what you're building and at least one core user flow to generate."}
+        </p>
+        <Button
+          onClick={onGenerateSkeleton}
+          disabled={!canGenerate}
+          className="shrink-0 px-6 py-3 text-base"
+        >
+          <Sparkles className="h-5 w-5" /> Generate skeleton
         </Button>
       </div>
     </div>
@@ -120,12 +137,14 @@ function Text({
   onChange,
   placeholder,
   textarea,
+  example,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
   textarea?: boolean;
+  example?: string;
 }) {
   const cls =
     "w-full rounded-lg border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-slate-800 outline-none focus:border-brand-blue";
@@ -150,7 +169,16 @@ function Text({
           className={cls}
         />
       )}
+      {example && <Example text={example} />}
     </label>
+  );
+}
+
+function Example({ text }: { text: string }) {
+  return (
+    <span className="mt-1.5 block text-xs text-slate-500">
+      <span className="font-medium text-slate-600">Example:</span> {text}
+    </span>
   );
 }
 
@@ -190,11 +218,13 @@ function List({
   values,
   onChange,
   placeholder,
+  example,
 }: {
   label: string;
   values: string[];
   onChange: (v: string[]) => void;
   placeholder?: string;
+  example?: string;
 }) {
   const [draft, setDraft] = useState("");
   function add() {
@@ -246,6 +276,7 @@ function List({
           <Plus className="h-4 w-4" />
         </button>
       </div>
+      {example && <Example text={example} />}
     </div>
   );
 }
