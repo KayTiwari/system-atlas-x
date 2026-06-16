@@ -208,7 +208,7 @@ export default function ProjectPage({
           <Chip label={project.status} />
         </div>
         <nav className="thin-scroll flex max-w-[62vw] gap-1 overflow-x-auto rounded-md border border-navy-700 bg-paper-soft p-1">
-          {TABS.map(({ id: t, label, hint }, index) => (
+          {TABS.map(({ id: t, label, hint }) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -219,9 +219,7 @@ export default function ProjectPage({
                   : "text-slate-600 hover:bg-navy-900/70 hover:text-ink"
               }`}
             >
-              <span className="font-mono text-[10px] text-brand-cyan">
-                {String(index + 1).padStart(2, "0")}
-              </span>
+              <span className={`atlas-tab-mark atlas-tab-mark-${t}`} aria-hidden="true" />
               {label}
             </button>
           ))}
