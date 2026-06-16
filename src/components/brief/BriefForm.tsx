@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, X, Plus } from "lucide-react";
+import { Sparkles, X, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAtlasStore } from "@/lib/store";
 import type {
   ArchitectureBrief,
@@ -21,6 +21,7 @@ export function BriefForm({
     (s) => s.projects.find((p) => p.id === projectId)?.brief
   );
   const updateBrief = useAtlasStore((s) => s.updateBrief);
+  const [step, setStep] = useState(0);
 
   if (!brief) return null;
 
@@ -29,6 +30,9 @@ export function BriefForm({
 
   const canGenerate =
     brief.productGoal.trim().length > 0 && brief.coreFlows.length > 0;
+
+  const lastStep = STEPS.length - 1;
+  const isLast = step === lastStep;
 
   return (
     <div className="space-y-6">
@@ -40,96 +44,170 @@ export function BriefForm({
         </p>
       </div>
 
+      {/* Progress */}
+      <div className="flex gap-2">
+        {STEPS.map((s, i) => (
+          <button
+            key={s.title}
+            onClick={() => setStep(i)}
+            className="group flex-1 text-left"
+          >
+            <div
+              className={`h-1.5 rounded-full transition ${
+                i <= step ? "bg-gradient-brand" : "bg-navy-700"
+              }`}
+            />
+            <span
+              className={`mt-2 block text-xs font-medium transition ${
+                i === step
+                  ? "text-ink"
+                  : "text-slate-500 group-hover:text-slate-600"
+              }`}
+            >
+              {i + 1}. {s.title}
+            </span>
+          </button>
+        ))}
+      </div>
+
       <Panel className="space-y-5 p-6">
-        <Text
-          label="What are you building?"
-          value={brief.productGoal}
-          textarea
-          placeholder="e.g. A customer-facing document upload and review platform"
-          example="A claims platform where insurance customers upload documents and reviewers approve them"
-          onChange={(v) => set({ productGoal: v })}
-        />
-        <Text
-          label="Who are the users?"
-          value={brief.users}
-          placeholder="Internal, external customers, admins, partner API…"
-          example="External policyholders, internal claims reviewers, a partner API"
-          onChange={(v) => set({ users: v })}
-        />
-        <List
-          label="Core user flows"
-          values={brief.coreFlows}
-          placeholder="e.g. Customer uploads a document"
-          example="Customer uploads a claim · Reviewer approves or rejects · Customer checks status"
-          onChange={(v) => set({ coreFlows: v })}
-        />
-        <Text
-          label="Traffic assumptions"
-          value={brief.trafficAssumptions}
-          placeholder="Users/day, requests/sec, peak traffic"
-          example="~5k daily users, ~50 req/s average, ~300 req/s at peak"
-          onChange={(v) => set({ trafficAssumptions: v })}
-        />
-        <div className="grid gap-5 sm:grid-cols-2">
-          <Select<DataSensitivity>
-            label="Data sensitivity"
-            value={brief.dataSensitivity}
-            options={[
-              ["low", "Low"],
-              ["medium", "Medium"],
-              ["high", "High"],
-            ]}
-            onChange={(v) => set({ dataSensitivity: v })}
-          />
-          <Select<Availability>
-            label="Availability requirement"
-            value={brief.availability}
-            options={[
-              ["best_effort", "Best effort"],
-              ["standard", "Standard"],
-              ["high", "High availability"],
-            ]}
-            onChange={(v) => set({ availability: v })}
-          />
-        </div>
-        <Text
-          label="Latency needs"
-          value={brief.latencyNeeds}
-          placeholder="What needs to be fast?"
-          example="Document list loads under 300ms; uploads can process asynchronously"
-          onChange={(v) => set({ latencyNeeds: v })}
-        />
-        <List
-          label="External integrations"
-          values={brief.integrations}
-          placeholder="Stripe, Twilio, S3, OpenAI…"
-          onChange={(v) => set({ integrations: v })}
-        />
-        <List
-          label="Compliance"
-          values={brief.compliance}
-          placeholder="HIPAA, SOC 2, GDPR, audit logs…"
-          onChange={(v) => set({ compliance: v })}
-        />
+        <p className="text-sm text-slate-500">{STEPS[step].subtitle}</p>
+
+        {step === 0 && (
+          <>
+            <Text
+              label="What are you building?"
+              value={brief.productGoal}
+              textarea
+              placeholder="e.g. A customer-facing document upload and review platform"
+              example="A claims platform where insurance customers upload documents and reviewers approve them"
+              onChange={(v) => set({ productGoal: v })}
+            />
+            <Text
+              label="Who are the users?"
+              value={brief.users}
+              placeholder="Internal, external customers, admins, partner API…"
+              example="External policyholders, internal claims reviewers, a partner API"
+              onChange={(v) => set({ users: v })}
+            />
+            <List
+              label="Core user flows"
+              values={brief.coreFlows}
+              placeholder="e.g. Customer uploads a document"
+              example="Customer uploads a claim · Reviewer approves or rejects · Customer checks status"
+              onChange={(v) => set({ coreFlows: v })}
+            />
+          </>
+        )}
+
+        {step === 1 && (
+          <>
+            <Text
+              label="Traffic assumptions"
+              value={brief.trafficAssumptions}
+              placeholder="Users/day, requests/sec, peak traffic"
+              example="~5k daily users, ~50 req/s average, ~300 req/s at peak"
+              onChange={(v) => set({ trafficAssumptions: v })}
+            />
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Select<DataSensitivity>
+                label="Data sensitivity"
+                value={brief.dataSensitivity}
+                options={[
+                  ["low", "Low"],
+                  ["medium", "Medium"],
+                  ["high", "High"],
+                ]}
+                onChange={(v) => set({ dataSensitivity: v })}
+              />
+              <Select<Availability>
+                label="Availability requirement"
+                value={brief.availability}
+                options={[
+                  ["best_effort", "Best effort"],
+                  ["standard", "Standard"],
+                  ["high", "High availability"],
+                ]}
+                onChange={(v) => set({ availability: v })}
+              />
+            </div>
+            <Text
+              label="Latency needs"
+              value={brief.latencyNeeds}
+              placeholder="What needs to be fast?"
+              example="Document list loads under 300ms; uploads can process asynchronously"
+              onChange={(v) => set({ latencyNeeds: v })}
+            />
+          </>
+        )}
+
+        {step === 2 && (
+          <>
+            <List
+              label="External integrations"
+              values={brief.integrations}
+              placeholder="Stripe, Twilio, S3, OpenAI…"
+              example="Stripe for payments · S3 for storage · SendGrid for email"
+              onChange={(v) => set({ integrations: v })}
+            />
+            <List
+              label="Compliance"
+              values={brief.compliance}
+              placeholder="HIPAA, SOC 2, GDPR, audit logs…"
+              example="SOC 2 · GDPR · audit logging for sensitive records"
+              onChange={(v) => set({ compliance: v })}
+            />
+          </>
+        )}
       </Panel>
 
-      <div className="sticky bottom-0 flex flex-col gap-3 border-t border-navy-700 bg-navy-900/95 py-4 backdrop-blur sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-slate-500">
-          {canGenerate
-            ? "Atlas turns this brief into a starting diagram you can refine."
-            : "Add what you're building and at least one core user flow to generate."}
-        </p>
-        <Button
-          onClick={onGenerateSkeleton}
-          disabled={!canGenerate}
-          className="shrink-0 px-6 py-3 text-base"
-        >
-          <Sparkles className="h-5 w-5" /> Generate skeleton
-        </Button>
+      {/* Step navigation + generate */}
+      <div className="sticky bottom-0 flex items-center justify-between gap-3 border-t border-navy-700 bg-navy-900/95 py-4 backdrop-blur">
+        <div>
+          {step > 0 && (
+            <Button variant="ghost" onClick={() => setStep(step - 1)}>
+              <ChevronLeft className="h-4 w-4" /> Back
+            </Button>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          {isLast && !canGenerate && (
+            <span className="hidden text-xs text-slate-500 sm:block">
+              Add what you&apos;re building and one core flow to generate.
+            </span>
+          )}
+          {!isLast && (
+            <Button variant="secondary" onClick={() => setStep(step + 1)}>
+              Next <ChevronRight className="h-4 w-4" />
+            </Button>
+          )}
+          <Button
+            onClick={onGenerateSkeleton}
+            disabled={!canGenerate}
+            className="shrink-0 px-5 py-2.5"
+          >
+            <Sparkles className="h-4 w-4" /> Generate skeleton
+          </Button>
+        </div>
       </div>
     </div>
   );
 }
+
+const STEPS: { title: string; subtitle: string }[] = [
+  {
+    title: "Product",
+    subtitle: "What you're building, who it's for, and the core flows.",
+  },
+  {
+    title: "Constraints",
+    subtitle: "Scale, data sensitivity, availability, and latency.",
+  },
+  {
+    title: "Integrations",
+    subtitle: "External services and compliance requirements (optional).",
+  },
+];
 
 function Text({
   label,
