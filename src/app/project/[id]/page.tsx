@@ -17,6 +17,7 @@ import {
   FileText,
   Download,
   Sparkles,
+  Loader2,
 } from "lucide-react";
 import { useAtlasStore, useHasHydrated } from "@/lib/store";
 import { defaultNodeData } from "@/lib/catalog";
@@ -167,8 +168,8 @@ export default function ProjectPage({
 
   if (!hydrated) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-gradient-dark text-slate-500">
-        Loading…
+      <main className="flex min-h-screen items-center justify-center bg-gradient-dark">
+        <Loader2 className="h-6 w-6 animate-spin text-slate-500" />
       </main>
     );
   }
