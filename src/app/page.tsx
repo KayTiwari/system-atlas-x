@@ -29,20 +29,21 @@ function AiConnectMark({ className = "h-4 w-4" }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M4 11.5a3 3 0 1 1 2.72-1.74L10.5 12l3.05-4.32A3 3 0 1 1 15.6 9.2L12.2 14H16"
+        d="M6 3v4M10 3v4M5 7h6v3a3 3 0 0 1-6 0V7zM8 13v2.5"
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M16 14v2.5M18 14v2.5"
+        d="M8 15.5h5.5M13.5 7.5H17M13.5 12H17"
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
       />
-      <circle cx="4" cy="11.5" r="1" fill="currentColor" />
-      <circle cx="15.6" cy="6.2" r="1" fill="currentColor" />
+      <circle cx="17" cy="7.5" r="1.5" fill="currentColor" />
+      <circle cx="17" cy="12" r="1.5" fill="currentColor" />
+      <circle cx="13.5" cy="15.5" r="1.5" fill="currentColor" />
     </svg>
   );
 }
