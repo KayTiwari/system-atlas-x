@@ -38,6 +38,7 @@ type IconData = { title: string; hex: string; path: string };
  */
 const IMAGE_ENTRIES: { token: string; title: string; src: string }[] = [
   { token: "dynamo", title: "Amazon DynamoDB", src: "/logos/dynamodb.svg" },
+  { token: "sqs", title: "Amazon SQS", src: "/logos/sqs.svg" },
   { token: "s3", title: "Amazon S3", src: "/logos/s3.svg" },
   { token: "azure blob", title: "Azure Blob Storage", src: "/logos/azure-blob.svg" },
 ];
