@@ -81,16 +81,41 @@ function ApiKeyGate({ onSave }: { onSave: (key: string) => void }) {
 
 function Header() {
   return (
-    <div>
-      <div className="flex items-center gap-2">
-        <Sparkles className="h-6 w-6 text-brand-cyan" />
-        <h2 className="text-2xl font-bold">AI assist</h2>
+    <div className="overflow-hidden rounded-md border border-navy-700 bg-navy-900 shadow-[0_18px_60px_rgba(28,27,25,0.08)]">
+      <div className="grid gap-0 md:grid-cols-[minmax(220px,0.72fr)_1fr]">
+        <AiSignalVisual />
+        <div className="flex flex-col justify-center border-t border-navy-700 p-5 md:border-l md:border-t-0 md:p-7">
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-brand-cyan">
+            AI assistant
+          </p>
+          <h2 className="mt-2 text-2xl font-bold">Architecture signal desk</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-500">
+            Upload the wireframe you drew, let Gemini review your architecture,
+            and chat through tradeoffs. Suggestions flow into the Review and
+            Tradeoffs tabs.
+          </p>
+        </div>
       </div>
-      <p className="mt-1 text-slate-500">
-        Upload the wireframe you drew, let Gemini review your architecture, and
-        chat through tradeoffs. Suggestions flow into the Review and Tradeoffs
-        tabs.
-      </p>
+    </div>
+  );
+}
+
+function AiSignalVisual() {
+  return (
+    <div className="ai-signal relative min-h-56 overflow-hidden bg-[#f3efe6]">
+      <div className="ai-signal-grid" />
+      <div className="ai-signal-orb ai-signal-orb-a" />
+      <div className="ai-signal-orb ai-signal-orb-b" />
+      <div className="ai-signal-ribbon ai-signal-ribbon-a" />
+      <div className="ai-signal-ribbon ai-signal-ribbon-b" />
+      <div className="ai-signal-ribbon ai-signal-ribbon-c" />
+      <div className="ai-signal-core" />
+      <div className="absolute bottom-4 left-5 right-5 flex items-center justify-between">
+        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-cyan">
+          live context
+        </span>
+        <span className="h-2 w-2 rounded-full bg-brand-cyan shadow-[0_0_16px_rgba(47,107,94,0.65)]" />
+      </div>
     </div>
   );
 }

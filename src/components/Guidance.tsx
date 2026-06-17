@@ -3,7 +3,6 @@
 import { useState } from "react";
 import {
   HelpCircle,
-  X,
   MessageCircle,
   ClipboardList,
 } from "lucide-react";
@@ -22,23 +21,35 @@ const TIPS = [
  */
 export function HelpButton() {
   const [open, setOpen] = useState(false);
+  const [rendered, setRendered] = useState(false);
+
+  function showGuide() {
+    setRendered(true);
+    setOpen(true);
+  }
+
+  function hideGuide() {
+    setOpen(false);
+    window.setTimeout(() => setRendered(false), 180);
+  }
+
+  function toggleGuide() {
+    if (rendered && open) hideGuide();
+    else showGuide();
+  }
 
   return (
     <div className="fixed bottom-6 right-6 z-40">
-      {open && (
-        <div className="mb-3 w-80 rounded-md border border-navy-700 bg-navy-900 p-4 shadow-xl">
-          <div className="mb-3 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-brand-cyan">
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em]">
-                Field guide
-              </span>
-            </div>
-            <button
-              onClick={() => setOpen(false)}
-              className="rounded-md p-1 text-slate-500 hover:bg-navy-800 hover:text-ink"
-            >
-              <X className="h-4 w-4" />
-            </button>
+      {rendered && (
+        <div
+          className={`guide-popover mb-3 w-80 rounded-md border border-navy-700 bg-navy-900 p-4 shadow-[0_24px_80px_rgba(28,27,25,0.18)] ${
+            open ? "guide-popover-open" : "guide-popover-close"
+          }`}
+        >
+          <div className="mb-3 flex items-center gap-2 text-brand-cyan">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em]">
+              Field guide
+            </span>
           </div>
           <ul className="space-y-2.5">
             {TIPS.map((text, i) => {
@@ -52,6 +63,12 @@ export function HelpButton() {
               );
             })}
           </ul>
+          <button
+            onClick={hideGuide}
+            className="mt-4 w-full rounded-md border border-navy-700 bg-paper-soft/70 px-3 py-2 text-left text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 transition hover:border-brand-blue/50 hover:text-brand-cyan"
+          >
+            Close guide
+          </button>
           <div className="mt-4 flex items-center gap-2 rounded-md border border-dashed border-navy-600 bg-paper-soft/70 px-3 py-2 text-xs text-slate-500">
             <MessageCircle className="h-4 w-4" />
             <span>Design assistant</span>
@@ -62,11 +79,12 @@ export function HelpButton() {
         </div>
       )}
       <button
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggleGuide}
         title="Help & getting started"
+        aria-expanded={open}
         className="flex h-12 w-12 items-center justify-center rounded-md border border-brand-blue bg-brand-blue text-white shadow-lg shadow-brand-blue/30 transition hover:bg-brand-blue-dark"
       >
-        {open ? <X className="h-5 w-5" /> : <HelpCircle className="h-5 w-5" />}
+        {open ? <MessageCircle className="h-5 w-5" /> : <HelpCircle className="h-5 w-5" />}
       </button>
     </div>
   );
