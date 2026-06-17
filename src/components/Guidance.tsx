@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  HelpCircle,
   MessageCircle,
   ClipboardList,
 } from "lucide-react";
@@ -84,7 +83,7 @@ export function HelpButton() {
         aria-expanded={open}
         className="flex h-12 w-12 items-center justify-center rounded-md border border-brand-blue bg-brand-blue text-white shadow-lg shadow-brand-blue/30 transition hover:bg-brand-blue-dark"
       >
-        {open ? <MessageCircle className="h-5 w-5" /> : <HelpCircle className="h-5 w-5" />}
+        {open ? <MessageCircle className="h-5 w-5" /> : <span className="ai-launcher-mark" aria-hidden="true" />}
       </button>
     </div>
   );
