@@ -33,7 +33,24 @@ export type ArchitectureNodeType =
   | "monitoring"
   | "ci_cd"
   | "hosting"
-  | "cloud_platform";
+  | "cloud_platform"
+  // Extended shared library (powers Learn + Build modes)
+  | "load_balancer"
+  | "event_bus"
+  | "payment_provider"
+  | "notification_provider"
+  | "idempotency_layer"
+  | "webhook_handler"
+  | "analytics_pipeline"
+  | "data_warehouse"
+  | "secrets_manager"
+  | "feature_flag"
+  | "admin_dashboard"
+  | "scheduler"
+  | "malware_scanner"
+  | "api_contract"
+  | "config_service"
+  | "recommendation_service";
 
 /** Editable reasoning metadata attached to every node. */
 export type ArchitectureNodeData = {

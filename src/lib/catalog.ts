@@ -25,6 +25,21 @@ import {
   ShieldCheck,
   Workflow,
   Zap,
+  Scale,
+  Radio,
+  CreditCard,
+  Bell,
+  Fingerprint,
+  Webhook,
+  BarChart3,
+  Warehouse,
+  Flag,
+  LayoutDashboard,
+  CalendarClock,
+  ShieldAlert,
+  FileJson,
+  SlidersHorizontal,
+  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 import type { ArchitectureNodeType, DecisionCategory } from "./types";
@@ -503,6 +518,336 @@ export const CATALOG: Record<ArchitectureNodeType, CatalogEntry> = {
     commonPatterns: [
       "Infrastructure as code (Terraform/CDK)",
       "Isolated VPC + least-privilege cloud IAM",
+    ],
+  },
+  load_balancer: {
+    type: "load_balancer",
+    label: "Load Balancer",
+    group: "Networking",
+    icon: Scale,
+    accent: "text-indigo-400",
+    purpose:
+      "Spreads incoming traffic across many service instances and routes around unhealthy ones.",
+    whenToUse: [
+      "More than one instance of a service",
+      "Zero-downtime deploys and failover",
+      "Any internet-facing system at scale",
+    ],
+    tradeoffs: [
+      "Enables horizontal scaling and health-gated routing",
+      "Itself must be highly available; adds a hop and config surface",
+    ],
+    commonPatterns: [
+      "L7 LB in front of stateless services",
+      "Health checks remove bad instances from rotation",
+    ],
+  },
+  event_bus: {
+    type: "event_bus",
+    label: "Event Bus",
+    group: "Async",
+    icon: Radio,
+    accent: "text-orange-400",
+    purpose:
+      "Publishes domain events to many independent subscribers (pub/sub fan-out).",
+    whenToUse: [
+      "One action must notify several systems",
+      "Decoupling producers from a growing set of consumers",
+      "Event-driven and real-time fan-out",
+    ],
+    tradeoffs: [
+      "Loose coupling and easy extension",
+      "Harder to trace; ordering and at-least-once delivery need handling",
+    ],
+    commonPatterns: [
+      "Publish event, N subscribers react independently",
+      "Pairs with idempotent consumers and a DLQ",
+    ],
+  },
+  payment_provider: {
+    type: "payment_provider",
+    label: "Payment Provider",
+    group: "External",
+    icon: CreditCard,
+    accent: "text-emerald-400",
+    purpose:
+      "A third party (Stripe, Adyen) that processes charges and holds PCI scope.",
+    whenToUse: ["Taking payments", "Subscriptions, marketplaces, checkout"],
+    tradeoffs: [
+      "Provider-hosted checkout slashes PCI scope",
+      "Less UI control; you must reconcile their state with yours",
+    ],
+    commonPatterns: [
+      "Create payment intent, confirm via webhook",
+      "Idempotency keys on every money-moving call",
+    ],
+  },
+  notification_provider: {
+    type: "notification_provider",
+    label: "Notification Provider",
+    group: "External",
+    icon: Bell,
+    accent: "text-emerald-400",
+    purpose:
+      "Sends email, SMS, or push through a third party (SES, Twilio, FCM).",
+    whenToUse: ["Transactional email/SMS", "Push notifications", "Alerts"],
+    tradeoffs: [
+      "Buy vs build deliverability and carrier relationships",
+      "External rate limits and outages; needs retries and a fallback",
+    ],
+    commonPatterns: [
+      "Queue notifications, worker calls provider with retries",
+      "Track delivery status and suppress on bounce",
+    ],
+  },
+  idempotency_layer: {
+    type: "idempotency_layer",
+    label: "Idempotency Layer",
+    group: "Reliability",
+    icon: Fingerprint,
+    accent: "text-teal-400",
+    purpose:
+      "Deduplicates retried or replayed requests so an operation runs at most once.",
+    whenToUse: [
+      "Payments and any money-moving operation",
+      "Webhook processing and at-least-once queues",
+      "Anywhere a client may retry",
+    ],
+    tradeoffs: [
+      "Prevents duplicate charges and double-processing",
+      "Needs a key store and a clear key-scoping strategy",
+    ],
+    commonPatterns: [
+      "Idempotency key + stored result, replayed on retry",
+      "Unique constraint on (operation, key)",
+    ],
+  },
+  webhook_handler: {
+    type: "webhook_handler",
+    label: "Webhook Handler",
+    group: "Compute",
+    icon: Webhook,
+    accent: "text-emerald-400",
+    purpose:
+      "Receives, verifies, and processes asynchronous callbacks from external systems.",
+    whenToUse: [
+      "Payment provider confirmations",
+      "Any provider that calls you back",
+    ],
+    tradeoffs: [
+      "Decouples you from provider latency",
+      "Must verify signatures, dedupe, and tolerate out-of-order delivery",
+    ],
+    commonPatterns: [
+      "Verify signature, store raw event, process async",
+      "Return 200 fast, do work on a queue",
+    ],
+  },
+  analytics_pipeline: {
+    type: "analytics_pipeline",
+    label: "Analytics Pipeline",
+    group: "Data",
+    icon: BarChart3,
+    accent: "text-cyan-400",
+    purpose:
+      "Collects, buffers, and transforms events into a store for reporting and trends.",
+    whenToUse: [
+      "Product analytics and dashboards",
+      "Trend detection over event streams",
+    ],
+    tradeoffs: [
+      "Keeps the hot path fast by processing async",
+      "Eventual consistency; schema drift needs governance",
+    ],
+    commonPatterns: [
+      "Emit event → buffer/queue → transform → warehouse",
+      "Keep raw events; derive aggregates downstream",
+    ],
+  },
+  data_warehouse: {
+    type: "data_warehouse",
+    label: "Data Warehouse",
+    group: "Data",
+    icon: Warehouse,
+    accent: "text-blue-400",
+    purpose:
+      "Columnar store optimized for analytical queries over large historical data.",
+    whenToUse: ["Reporting, BI, trend analysis", "Querying months of events"],
+    tradeoffs: [
+      "Fast aggregates over huge datasets",
+      "Not a transactional store; batch/stream loads add lag",
+    ],
+    commonPatterns: [
+      "ELT from the app DB / event pipeline",
+      "Separate from the operational source of truth",
+    ],
+  },
+  secrets_manager: {
+    type: "secrets_manager",
+    label: "Secrets Manager",
+    group: "Security",
+    icon: Lock,
+    accent: "text-fuchsia-400",
+    purpose:
+      "Stores and rotates credentials, keys, and tokens out of code and config.",
+    whenToUse: [
+      "Any system with API keys or DB credentials",
+      "High-sensitivity or regulated data",
+    ],
+    tradeoffs: [
+      "Central rotation and least-privilege access",
+      "A dependency on the request/boot path if not cached carefully",
+    ],
+    commonPatterns: [
+      "Inject secrets at runtime, never in the repo",
+      "Short-lived credentials with automatic rotation",
+    ],
+  },
+  feature_flag: {
+    type: "feature_flag",
+    label: "Feature Flag Service",
+    group: "Platform",
+    icon: Flag,
+    accent: "text-violet-400",
+    purpose:
+      "Toggles features at runtime for rollout, experimentation, and kill switches.",
+    whenToUse: [
+      "Progressive rollout and canary releases",
+      "A/B tests and emergency kill switches",
+    ],
+    tradeoffs: [
+      "Decouples deploy from release; instant rollback",
+      "Flag debt accumulates; another runtime dependency",
+    ],
+    commonPatterns: [
+      "Evaluate flags at the edge or in-service",
+      "Clean up stale flags on a schedule",
+    ],
+  },
+  admin_dashboard: {
+    type: "admin_dashboard",
+    label: "Admin Dashboard",
+    group: "Client",
+    icon: LayoutDashboard,
+    accent: "text-sky-400",
+    purpose:
+      "Internal console for staff to view, moderate, and act on data.",
+    whenToUse: [
+      "Operations, support, and moderation workflows",
+      "Reviewing intake, orders, or flagged content",
+    ],
+    tradeoffs: [
+      "Unlocks staff productivity",
+      "A privileged surface: needs auth, RBAC, and audit logging",
+    ],
+    commonPatterns: [
+      "Separate auth boundary and roles from end users",
+      "Every privileged action writes an audit entry",
+    ],
+  },
+  scheduler: {
+    type: "scheduler",
+    label: "Scheduler / Cron",
+    group: "Async",
+    icon: CalendarClock,
+    accent: "text-orange-400",
+    purpose:
+      "Triggers recurring or future-dated jobs (reports, cleanup, reconciliation).",
+    whenToUse: [
+      "Nightly batch and digests",
+      "Reconciliation and retention sweeps",
+    ],
+    tradeoffs: [
+      "Simple time-based automation",
+      "Needs locking so a job runs once across instances",
+    ],
+    commonPatterns: [
+      "Cron enqueues a job; a worker does the work",
+      "Distributed lock to avoid double-runs",
+    ],
+  },
+  malware_scanner: {
+    type: "malware_scanner",
+    label: "Malware Scanner",
+    group: "Security",
+    icon: ShieldAlert,
+    accent: "text-fuchsia-400",
+    purpose:
+      "Scans user-uploaded files for malicious content before they are served.",
+    whenToUse: [
+      "Any system accepting file uploads",
+      "Files later served to other users",
+    ],
+    tradeoffs: [
+      "Stops you from hosting and serving malware",
+      "Adds processing latency; quarantine flow needed",
+    ],
+    commonPatterns: [
+      "Upload to quarantine bucket, scan async, then promote",
+      "Block serving until scan passes",
+    ],
+  },
+  api_contract: {
+    type: "api_contract",
+    label: "API Contract / Schema",
+    group: "Compute",
+    icon: FileJson,
+    accent: "text-emerald-400",
+    purpose:
+      "A versioned, validated schema (OpenAPI/GraphQL) defining the API surface.",
+    whenToUse: [
+      "Public or partner APIs",
+      "Multiple teams or clients consuming an API",
+    ],
+    tradeoffs: [
+      "Stable contracts and generated clients/validation",
+      "Versioning discipline and deprecation process required",
+    ],
+    commonPatterns: [
+      "Schema-first with request/response validation",
+      "Contract tests gate breaking changes in CI",
+    ],
+  },
+  config_service: {
+    type: "config_service",
+    label: "Configuration Service",
+    group: "Platform",
+    icon: SlidersHorizontal,
+    accent: "text-violet-400",
+    purpose:
+      "Centralizes runtime configuration across services and environments.",
+    whenToUse: [
+      "Many services sharing settings",
+      "Changing config without a redeploy",
+    ],
+    tradeoffs: [
+      "Consistent, auditable config",
+      "A new dependency; cache and fail safe on outages",
+    ],
+    commonPatterns: [
+      "Versioned config with safe defaults",
+      "Watch/poll for changes; validate on load",
+    ],
+  },
+  recommendation_service: {
+    type: "recommendation_service",
+    label: "Recommendation Service",
+    group: "Compute",
+    icon: Sparkles,
+    accent: "text-emerald-400",
+    purpose:
+      "Computes personalized rankings or suggestions from user and item data.",
+    whenToUse: [
+      "Feeds, related items, personalization",
+      "Discovery in content and marketplaces",
+    ],
+    tradeoffs: [
+      "Drives engagement and discovery",
+      "Needs feature data, retraining, and a sensible cold-start fallback",
+    ],
+    commonPatterns: [
+      "Precompute candidates offline, rank at request time",
+      "Fall back to popularity when signals are thin",
     ],
   },
 };

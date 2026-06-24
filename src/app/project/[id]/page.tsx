@@ -250,7 +250,7 @@ export default function ProjectPage({
       <main className="atlas-grid-bg flex min-h-screen flex-col items-center justify-center gap-4">
         <p className="text-slate-600">This architecture could not be found.</p>
         <button
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/build")}
           className="text-brand-cyan hover:underline"
         >
           Back to dashboard
@@ -267,7 +267,7 @@ export default function ProjectPage({
       <header className="flex min-h-[72px] items-center justify-between gap-4 border-b border-navy-700 bg-navy-900/95 px-4 py-3 backdrop-blur">
         <div className="flex min-w-0 items-center gap-3">
           <button
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/build")}
             className="rounded-md border border-navy-700 p-2 text-slate-600 hover:border-brand-blue/50 hover:bg-paper-soft hover:text-ink"
             title="Back to dashboard"
           >
