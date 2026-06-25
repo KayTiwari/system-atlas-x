@@ -19,6 +19,9 @@ import { ReferenceArchitecturePanel } from "@/components/learn/ReferenceArchitec
 import { InterviewExplanationPanel } from "@/components/learn/InterviewExplanationPanel";
 import { AtlasCoach } from "@/components/coach/AtlasCoach";
 
+/** Stable empty reference so the store selector never returns a fresh array. */
+const EMPTY_SELECTION: ComponentId[] = [];
+
 type Tab = "review" | "reference" | "interview" | "component";
 
 const TABS: { id: Tab; label: string }[] = [
@@ -38,7 +41,11 @@ export default function LearnScenarioPage({
   if (!scenario) notFound();
 
   const hydrated = useLearnHasHydrated();
-  const selectedList = useLearnStore((s) => s.selections[id] ?? []);
+  // Select the raw (stable) reference and default outside the selector. Returning
+  // a fresh [] from the selector would break useSyncExternalStore (React 19
+  // "getSnapshot should be cached" / infinite loop).
+  const storedList = useLearnStore((s) => s.selections[id]);
+  const selectedList = storedList ?? EMPTY_SELECTION;
   const toggle = useLearnStore((s) => s.toggleComponent);
   const add = useLearnStore((s) => s.addComponent);
   const remove = useLearnStore((s) => s.removeComponent);

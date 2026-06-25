@@ -1,107 +1,98 @@
-# System Atlas
+# System Atlas X
 
 **Live demo: [system-atlas-x.vercel.app](https://system-atlas-x.vercel.app)**
 
-**From product brief to design doc in 20 minutes.** A guided architecture workbench:
-answer a structured brief, get a starting architecture, weigh the trade-offs behind each
-component, and export a design doc your team can build from. The pipeline (Brief →
-Skeleton → Review → Tradeoffs → Decisions → Export) is the product; the canvas is one
-view of the model.
+**Learn system design. Build real architectures. Get senior-level review.**
+Architecture intelligence for engineers, in two modes that share one deterministic
+engine: a **Learn Mode** for studying system design and prepping for interviews, and a
+**Build Mode** for planning real software architectures. No LLM key required for the core
+product; everything is local-first and runs in your browser.
 
-![System Atlas canvas](docs/screenshot.png)
+![System Atlas X](docs/screenshot.png)
 
 ## What it is
 
-System Atlas is built around **guided architecture thinking**. You answer a structured
-brief, the app proposes a starting architecture, and every component on the canvas
-carries real reasoning (purpose, technology, data owned, scaling, failure behavior).
-Two engines then work over that model:
+System Atlas X is not a diagramming tool. The advantage is not drawing perfect boxes - it
+is helping you **think, defend, and improve architecture decisions**. One shared engine
+reviews any architecture for missing pieces, explains tradeoffs and failure modes, scores
+it, and turns it into either an interview-ready explanation or a production architecture
+spec.
+
+- **Learn Mode** - practice system design scenarios, study the building blocks, and
+  generate interview-ready explanations, with senior-level review of every design.
+- **Build Mode** - plan a real architecture from a guided brief or template, review it for
+  production risk, and export an implementation-ready spec.
+
+## Learn Mode
+
+A study and interview-prep path built around 10 scenarios (URL shortener, real-time chat,
+video streaming, ride-sharing dispatch, payment processing, notification service, file
+upload, distributed rate limiter, e-commerce checkout, form analytics / intake dashboard).
+
+For a chosen scenario you:
+
+1. See the functional and non-functional requirements, concepts, and common pitfalls.
+2. Assemble an architecture answer from a searchable component palette.
+3. Get a live **Interview Readiness** score (0-49 Needs Work · 50-69 Developing · 70-84
+   Strong · 85-100 Interview Ready) with category bars and findings - each marked
+   critical / warning / suggestion / strength, with *why it matters* and an interview tip.
+4. Compare against a **Senior-Level Reference** architecture (with a missing-piece diff).
+5. **Generate an Interview Explanation** - a deterministic, first-person walkthrough of
+   requirements, request flow, scaling, reliability, security, observability, and
+   tradeoffs (copy as Markdown).
+6. Get quiet, contextual nudges from **Atlas Coach**.
+
+Plus 10 lightweight **Study Path** concept modules (request flow, caching, queues/DLQs,
+auth, payments & idempotency, observability, interview framing, ...).
+
+## Build Mode
+
+The real-world planning workspace. Start from a template or a structured brief, get a
+recommended starter architecture, refine it on a drag-and-drop canvas where every node
+carries reasoning, then:
 
 - **Architecture Review** flags the pieces teams most often forget.
-- **Tradeoff Engine** recommends which technology to pick, explains why, and lets you
-  swap a component for an alternative in one click.
-
-## Features
-
-- **Architecture Brief** - a structured intake (goals, users, scale, data sensitivity,
-  availability, integrations, compliance).
-- **Skeleton generation** - turns the brief into a starting architecture you refine on a
-  drag-and-drop canvas.
-- **Component knowledge** - every node carries primer-sourced reasoning (purpose, when to
-  use, trade-offs) plus editable metadata.
-- **Architecture Review** - a rule-based linter that flags missing pieces (no rate limiter
-  on a public API, a queue with no dead-letter queue, sensitive data with no audit log).
-- **Tradeoff Engine** - given the brief, recommends a technology per decision area
-  (Postgres vs Mongo vs DynamoDB, Redis vs CDN cache, Queue vs Kafka, ...), with scored
-  comparison matrices and blunt rule-of-thumb cards. Recommendations are framed as
-  "suggested fit based on your brief," with a confidence level.
-- **Swap parts** - replace any component with an alternative from its inspector; database
-  swaps even retype relational vs non-relational, keeping connections intact.
-- **AI assist (free, optional)** - upload a wireframe/sketch and let Google Gemini review
-  your design. Suggestions flow into the Review and Tradeoffs tabs, and a chat lets you talk
-  through tradeoffs (save any reply as a note or ADR). Bring your own free Gemini key
-  ([get one here](https://aistudio.google.com/app/apikey)); it is stored only in your browser
+- **Tradeoff Engine** recommends which technology to pick, explains why, and swaps a
+  component for an alternative in one click.
+- **Decision records (ADRs)** capture choices, generated from a recommendation.
+- **Export** to JSON (round-trips), a Markdown design doc, or a PNG of the canvas.
+- **AI assist (free, optional)** - upload a wireframe and let Google Gemini review the
+  design into the Review and Tradeoffs tabs. Bring your own free Gemini key
+  ([get one](https://aistudio.google.com/app/apikey)); it is stored only in your browser
   and called directly, so there is still no backend.
-- **Notes** - add your own recommendations by hand, right alongside the rule findings and AI
-  suggestions in the Review tab.
-- **Decision records (ADRs)** - capture architecture choices, generated in one click from
-  a trade-off recommendation.
-- **Blueprints** - load industry patterns (three-tier, microservices, event-driven,
-  serverless, read-heavy, rate-limited public API) or product use cases (SaaS, document
-  processing, real-time chat, e-commerce, AI/RAG).
-- **Export** - JSON (round-trips), a Markdown design doc, and a PNG of the canvas.
 
-## How the brief becomes a skeleton
+## The shared intelligence engine
 
-It is a deterministic two-step pipeline (no AI):
+Both modes run on the same pure, deterministic core (no AI, no API key):
 
-1. **Derive context** - keyword detection over the brief's free-text fields produces flags
-   like `hasFileUploads`, `hasPayments`, `hasExternalUsers`, `isHighTraffic`, plus the
-   structured `dataSensitivity` and `availability`.
-2. **Map to a graph** - those flags add the right components in tiered columns and wire
-   them up. For example, public users add an API gateway and rate limiter; file uploads add
-   object storage, a queue, a worker, and a dead-letter queue; high sensitivity adds an
-   audit log and authorization boundary.
+- **43-component catalog** with a deep knowledge layer: purpose, when to use,
+  alternatives, tradeoffs, failure modes, interview talking points, implementation notes,
+  related components, and tags.
+- **Review engine** - a rules-based reviewer (rate limiter on a public API, queue without
+  a dead-letter queue, payments without idempotency / audit log / webhook handler,
+  admin dashboard without auth, sensitive data without secrets management, ...).
+- **Scoring engine** - per-category and overall scores with mode-specific labels
+  (Interview Readiness vs Architecture Confidence).
+- **Explanation generator** - turns a design into an interview explanation or, in Build
+  Mode, an architecture spec.
+- **Atlas Coach** - 1-3 calm, senior-engineer tips based on mode, scenario, selection, and
+  review results. No popups, no noise.
 
-The same context flags drive the review linter and the tradeoff engine, so the brief is a
-single source of truth across skeleton, review, and recommendations.
-
-## Using the app
-
-1. **New architecture** (or pick a blueprint) to create a project. A blank one opens
-   straight into the Brief.
-2. Fill the **Brief**, then **Generate skeleton**.
-3. On the **Canvas**, drag components from the palette, connect them, and click any node to
-   edit its reasoning in the inspector. Use **Swap technology** to try alternatives.
-4. Run **Review** to catch gaps and **Tradeoffs** to compare technologies; turn any
-   recommendation into a **Decision** (ADR) with one click.
-5. Open **Assist** to upload your wireframe and let Gemini review the design; its
-   suggestions land in Review and Tradeoffs, and the chat answers follow-ups. Add your own
-   notes in Review too. (Connect a free Gemini key from the dashboard or the Assist tab.)
-6. **Export** to JSON, Markdown, or PNG. Re-import JSON from the dashboard.
+Because it is deterministic, the engine is testable and instant - the same input always
+produces the same review, score, and explanation.
 
 ## Tech stack
 
 - Next.js 15 (App Router) + React 19 + TypeScript
 - Tailwind CSS (light, premium-minimal theme)
-- [React Flow](https://reactflow.dev/) (`@xyflow/react`) for the canvas
+- [React Flow](https://reactflow.dev/) (`@xyflow/react`) for the Build canvas
 - Zustand (with `persist`) for state - **local-first, stored in the browser**
 - `html-to-image` for PNG export, `lucide-react` for icons
-- Google **Gemini** for the optional AI assistant (bring-your-own free key, called
-  directly from the browser - no server proxy)
+- Google **Gemini** for the optional Build-Mode AI assistant (bring-your-own free key,
+  called directly from the browser - no server proxy)
 
-Project data lives in `localStorage` - the app is fully usable with **no backend, database,
-or auth**. The only optional layer is the **AI assistant**, which works the moment you paste
-a free Gemini key; the key never leaves your browser, so there is still no server of ours in
-the loop. The data model is shaped so a backend can be added later without reshaping data.
-
-### Cost
-
-**No required spend.** Hosting is Vercel's free Hobby tier, project data is local, and the
-AI assistant uses each user's own **free** Gemini key (Google AI Studio free tier, which
-includes image input). Heavy AI use can hit the free-tier rate limit - the app surfaces a
-"slow down" message rather than ever incurring a charge; you would only pay if you enabled
-billing on your own Google key. Nothing here bills you or your users by default.
+Project and scenario data live in `localStorage` - the app is fully usable with **no
+backend, database, or auth**. The only optional layer is the Build-Mode AI assistant.
 
 ## Local development
 
@@ -109,7 +100,11 @@ billing on your own Google key. Nothing here bills you or your users by default.
 npm install
 npm run dev      # http://localhost:3000
 npm run build    # production build / type check
+npm test         # vitest (pure engine tests)
 ```
+
+Routes: `/` (landing) · `/learn` · `/learn/[id]` (scenario workspace) · `/build`
+(dashboard) · `/project/[id]` (Build workspace) · `/components` (Component Library).
 
 ## Deploy
 
@@ -119,34 +114,38 @@ the browser, so it is never an environment variable.
 
 ## Roadmap
 
-- **AI assistant** - shipped: wireframe upload, design review into Review/Tradeoffs, and a
-  context-aware chat (Gemini, bring-your-own key). Next: stream responses and per-node
-  inline suggestions.
-- Accounts, a database, and shareable links so projects sync across devices and teams
-- Mermaid and PDF export
+- Wire Build Mode fully onto the shared engine (Architecture Confidence review + a
+  13-section architecture-spec generator)
+- More scenarios and reference architectures
+- Accounts, a database, and shareable links so work syncs across devices and teams
 - Real-time collaboration and version history
 
 ## Project structure
 
 ```
 src/
-  app/                 # routes: dashboard (/) and editor (/project/[id]); icon.svg favicon
-  components/          # brief, canvas, review, tradeoffs, decisions, export, ai, ui
+  app/                 # routes: / (landing), /learn, /learn/[id], /build, /project/[id], /components
+  components/
+    nav/ coach/        # TopNav, Atlas Coach
+    architecture/      # palette, selected board, knowledge panel, review panel (shared)
+    learn/             # reference + interview-explanation panels
+    brief/ canvas/ review/ tradeoffs/ decisions/ export/ ai/ ui/   # Build Mode
+  data/
+    learningScenarios.ts       # 10 interview scenarios
+    referenceArchitectures.ts  # senior reference answers
+    courseModules.ts           # study-path concept modules
   lib/
-    types.ts           # all entity types (React Flow-native nodes/edges)
-    store.ts           # zustand + localStorage persistence (projects, suggestions, key)
-    analysis.ts        # deriveContext: brief -> normalized flags (pure)
-    catalog.ts         # component library + knowledge (drives palette + inspector)
-    blueprints.ts      # starter reference architectures
-    skeleton.ts        # brief -> starter graph (pure)
-    linter.ts          # Architecture Review rules (pure)
-    tradeoffs.ts       # technology options + scores + rules of thumb
-    decisionRules.ts   # decision rules + recommendation engine (pure)
-    ai/                # gemini.ts (browser client) + assist.ts (summarize/analyze/chat)
-    export/            # markdown / png / json exporters
+    catalog.ts          # 43-component library (drives palette + inspector)
+    knowledge.ts        # deep study knowledge layer
+    reviewEngine.ts     # rules-based review + scoring (pure)
+    explanationGenerator.ts  # interview explanation / spec (pure)
+    atlasCoach.ts       # contextual coach tips (pure)
+    learnTypes.ts learnStore.ts   # Learn Mode types + persisted selections
+    types.ts store.ts analysis.ts skeleton.ts linter.ts tradeoffs.ts decisionRules.ts  # Build Mode
+    ai/ export/         # gemini client; markdown / png / json exporters
 ```
 
-See [docs/PRODUCT_PLAN.md](docs/PRODUCT_PLAN.md) for the full product vision.
+See [docs/PRODUCT_PLAN.md](docs/PRODUCT_PLAN.md) for the original product vision.
 
 ---
 

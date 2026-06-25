@@ -3,6 +3,7 @@ import { reviewArchitecture, readinessLabel } from "../reviewEngine";
 import { getScenario } from "@/data/learningScenarios";
 import { generateInterviewExplanation } from "../explanationGenerator";
 import { getAtlasCoachTips } from "../atlasCoach";
+import type { ComponentId } from "../learnTypes";
 
 const payments = getScenario("payment-processing")!;
 
@@ -56,7 +57,12 @@ describe("reviewEngine", () => {
   it("is deterministic for the same input", () => {
     const input = {
       mode: "learn" as const,
-      selectedComponentIds: ["web_app", "api_service", "sql_database", "cache"],
+      selectedComponentIds: [
+        "web_app",
+        "api_service",
+        "sql_database",
+        "cache",
+      ] as ComponentId[],
       scenario: getScenario("url-shortener")!,
     };
     const a = reviewArchitecture(input);
