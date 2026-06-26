@@ -12,6 +12,10 @@ export const LEARNING_SCENARIOS: LearningScenario[] = [
     difficulty: "Beginner",
     description:
       "Design a service that turns long URLs into short links and redirects users at high read volume. The classic warm-up: simple to state, deep on read-scaling and key generation.",
+    overview:
+      "You will design a service that creates short codes for long URLs and redirects users to the original at very high read volume. We will work outward from the request path, then add the cache and async analytics that make redirects fast.",
+    whyItMatters:
+      "It looks trivial but it is the canonical read-heavy problem. Interviewers use it to see whether you reason about read/write ratio, caching, and key generation rather than just drawing boxes.",
     concepts: [
       "Read-heavy scaling",
       "Caching hot keys",
@@ -59,6 +63,10 @@ export const LEARNING_SCENARIOS: LearningScenario[] = [
     difficulty: "Intermediate",
     description:
       "Design a messaging system where users exchange messages in near real time across devices, with delivery guarantees and presence.",
+    overview:
+      "You will design near real-time messaging across devices. We will start with how clients stay connected and scale, then make messages durable and ordered, and finally handle delivery to offline users.",
+    whyItMatters:
+      "Real-time systems force you to confront connection state, fan-out, and delivery guarantees - the things that separate a toy chat demo from one that survives reconnects and scales past one server.",
     concepts: [
       "Real-time delivery (WebSockets)",
       "Fan-out to subscribers",
@@ -112,6 +120,10 @@ export const LEARNING_SCENARIOS: LearningScenario[] = [
     difficulty: "Advanced",
     description:
       "Design a platform that ingests, transcodes, and streams video to a global audience - a YouTube/Netflix-scale read-heavy media problem.",
+    overview:
+      "You will design a platform that ingests and transcodes video, then streams it to a global audience. We will build the upload and transcode pipeline first, then the CDN-backed delivery path, then discovery.",
+    whyItMatters:
+      "Media at scale is where async pipelines and edge delivery become non-negotiable. It tests whether you keep heavy work off the request path and serve global reads without melting the origin.",
     concepts: [
       "Media transcoding pipelines",
       "CDN and edge delivery",
@@ -167,6 +179,10 @@ export const LEARNING_SCENARIOS: LearningScenario[] = [
     difficulty: "Advanced",
     description:
       "Design an Uber-like system that matches riders with nearby drivers in real time and tracks trips - geospatial, real-time, and reliability-heavy.",
+    overview:
+      "You will design real-time matching between riders and nearby drivers, plus the trip lifecycle and payment at the end. We will build the request path, the geospatial matching layer, the trip state machine, and safe payment.",
+    whyItMatters:
+      "It combines geospatial search, event-driven dispatch, a state machine, and payments in one problem. It rewards picking the right index for matching and getting idempotency right where money is involved.",
     concepts: [
       "Geospatial indexing & matching",
       "Real-time location updates",
@@ -222,6 +238,10 @@ export const LEARNING_SCENARIOS: LearningScenario[] = [
     difficulty: "Advanced",
     description:
       "Design a system that takes payments correctly: no duplicate charges, full auditability, safe retries, and reconciliation with the provider.",
+    overview:
+      "You will design a system that takes payments correctly: no duplicate charges, full auditability, and safe retries. We will build the checkout path, then idempotency, then async webhook confirmation, then reconciliation.",
+    whyItMatters:
+      "Payments are where correctness beats latency and a single missed edge case costs real money. It is the canonical test of idempotency, treating webhooks as the source of truth, and auditability.",
     concepts: [
       "Idempotency",
       "Webhooks & async confirmation",
@@ -282,6 +302,10 @@ export const LEARNING_SCENARIOS: LearningScenario[] = [
     difficulty: "Intermediate",
     description:
       "Design a service that sends email, SMS, and push reliably across many products, tolerating provider downtime and respecting user preferences.",
+    overview:
+      "You will design a service that sends email, SMS, and push reliably for many products. We will build the ingestion API, then the queue and workers that make delivery resilient, then preferences and idempotent sends.",
+    whyItMatters:
+      "It is the cleanest way to show you understand async fan-out, retries, and idempotency. The whole point is that a provider outage becomes a retry, not a dropped message.",
     concepts: [
       "Async fan-out",
       "Retries & provider failover",
@@ -333,6 +357,10 @@ export const LEARNING_SCENARIOS: LearningScenario[] = [
     difficulty: "Intermediate",
     description:
       "Design a system that accepts user file uploads, scans and processes them safely, and serves them back - the home of object storage, malware scanning, and async work.",
+    overview:
+      "You will design a system that accepts user file uploads, processes them safely, and serves them back. We will keep big files off the request path, scan them before serving, and control who can access them.",
+    whyItMatters:
+      "File uploads quietly raise security and scaling questions: where bytes live, how you avoid serving malware, and how you keep large transfers off your application servers.",
     concepts: [
       "Object storage & signed URLs",
       "Async processing pipelines",
@@ -385,6 +413,10 @@ export const LEARNING_SCENARIOS: LearningScenario[] = [
     difficulty: "Intermediate",
     description:
       "Design a rate limiter that caps request rates per client across a fleet of servers - a focused deep-dive on shared state and algorithms.",
+    overview:
+      "You will design a rate limiter that caps request rates per client across a whole fleet of servers. We will place it at the edge, back it with shared state, and decide how it behaves under failure.",
+    whyItMatters:
+      "It is a focused systems problem: per-instance counters quietly leak limits, so it forces you to reason about shared low-latency state, algorithm choice, and fail-open versus fail-closed.",
     concepts: [
       "Token bucket / sliding window",
       "Distributed counters",
@@ -425,6 +457,10 @@ export const LEARNING_SCENARIOS: LearningScenario[] = [
     difficulty: "Advanced",
     description:
       "Design the checkout path of an online store: cart, inventory reservation, payment, and order fulfillment - correctness and reliability under load.",
+    overview:
+      "You will design the checkout path of an online store: cart, inventory reservation, payment, and fulfillment. We will prevent oversell, make payment idempotent, and decouple fulfillment so spikes do not break checkout.",
+    whyItMatters:
+      "Checkout is where concurrency and money collide. It tests inventory consistency under concurrent buyers, duplicate-charge prevention, and keeping the critical path resilient during a sale.",
     concepts: [
       "Inventory reservation & consistency",
       "Payment idempotency",
@@ -485,6 +521,10 @@ export const LEARNING_SCENARIOS: LearningScenario[] = [
     difficulty: "Intermediate",
     description:
       "Design a platform that collects form submissions from embeddable forms, processes them, and gives staff a queryable dashboard with trends - data privacy and admin access front and center.",
+    overview:
+      "You will design a platform that collects submissions from embeddable public forms, processes them, and gives staff a queryable dashboard. We will protect the public intake, store submissions safely, and gate the admin surface.",
+    whyItMatters:
+      "A public intake endpoint plus private staff tooling puts data privacy, abuse protection, and access control at the center. It rewards rate limiting the front door and auditing who reads submitter data.",
     concepts: [
       "Embeddable intake & ingestion",
       "Async processing and analytics",

@@ -1,34 +1,9 @@
 "use client";
 
 import { X } from "lucide-react";
-import { CATALOG, type PaletteGroup } from "@/lib/catalog";
+import { CATALOG } from "@/lib/catalog";
+import { TIER_OF, TIER_ORDER } from "@/lib/tiers";
 import type { ComponentId } from "@/lib/learnTypes";
-
-/** Collapse the fine-grained palette groups into a few architecture tiers. */
-const TIER_OF: Record<PaletteGroup, string> = {
-  Client: "Edge / Entry",
-  Networking: "Edge / Entry",
-  Compute: "Services",
-  Data: "Data",
-  Async: "Async / Events",
-  Reliability: "Reliability",
-  Security: "Security",
-  Observability: "Observability",
-  Platform: "Operations",
-  External: "External",
-};
-
-const TIER_ORDER = [
-  "Edge / Entry",
-  "Services",
-  "Data",
-  "Async / Events",
-  "Reliability",
-  "Security",
-  "Observability",
-  "Operations",
-  "External",
-];
 
 export function SelectedComponents({
   ids,

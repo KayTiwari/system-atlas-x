@@ -12,6 +12,10 @@ export type LearningScenario = {
   title: string;
   difficulty: Difficulty;
   description: string;
+  /** One-paragraph framing shown on the scenario overview/intro screen. */
+  overview?: string;
+  /** Why this problem and its constraints matter (overview screen). */
+  whyItMatters?: string;
   /** Core system-design concepts this scenario teaches. */
   concepts: string[];
   functionalRequirements: string[];
@@ -113,4 +117,29 @@ export type CoachTip = {
 export type GeneratedDoc = {
   title: string;
   sections: { heading: string; body: string[] }[];
+};
+
+/** One lesson in a scenario's guided course (a single architecture layer). */
+export type LessonStage = {
+  /** Tier name, e.g. "Edge / Entry". */
+  tier: string;
+  /** Short, course-friendly title, e.g. "Step 1 - Entry & Edge". */
+  title: string;
+  /** Why this layer matters (generic per-tier copy + scenario emphasis). */
+  teaching: string;
+  /** A guiding question to think through before adding components. */
+  guidingQuestion: string;
+  /** Core components for this layer (critical/expected) the scenario needs. */
+  coreComponentIds: ComponentId[];
+  /** Senior-signal components for this layer (recommended). */
+  seniorComponentIds: ComponentId[];
+  /** Pitfalls relevant to this layer, surfaced as "watch out for". */
+  pitfalls: string[];
+  /** A short reflection / check prompt to reinforce the lesson. */
+  checkPrompt: string;
+};
+
+export type LessonPlan = {
+  scenarioId: string;
+  stages: LessonStage[];
 };
