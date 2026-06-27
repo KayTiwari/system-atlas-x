@@ -32,6 +32,18 @@ describe("buildLessonPlan", () => {
     expect(isStageComplete(stage, new Set(stage.coreComponentIds))).toBe(true);
   });
 
+  it("a senior-only stage is not complete until something is added", () => {
+    const plan = buildLessonPlan(getScenario("url-shortener")!);
+    const seniorOnly = plan.stages.find(
+      (s) => s.coreComponentIds.length === 0 && s.seniorComponentIds.length > 0
+    )!;
+    expect(seniorOnly, "expected a senior-only stage").toBeDefined();
+    expect(isStageComplete(seniorOnly, new Set())).toBe(false);
+    expect(
+      isStageComplete(seniorOnly, new Set([seniorOnly.seniorComponentIds[0]]))
+    ).toBe(true);
+  });
+
   it("is deterministic for the same scenario", () => {
     const a = buildLessonPlan(getScenario("payment-processing")!);
     const b = buildLessonPlan(getScenario("payment-processing")!);

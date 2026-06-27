@@ -112,7 +112,17 @@ export function buildLessonPlan(scenario: LearningScenario): LessonPlan {
   return { scenarioId: scenario.id, stages };
 }
 
-/** A stage is "complete" once all of its core components are selected. */
+/**
+ * A stage is "complete" once all its core components are selected AND at least
+ * one of its components is present. The second clause matters for layers whose
+ * components are all senior-signal (e.g. Observability = just monitoring): with
+ * no core components, `every` is vacuously true, so without it the stage would
+ * show as done before the user adds anything.
+ */
 export function isStageComplete(stage: LessonStage, selected: Set<ComponentId>): boolean {
-  return stage.coreComponentIds.every((id) => selected.has(id));
+  const all = [...stage.coreComponentIds, ...stage.seniorComponentIds];
+  if (all.length === 0) return false;
+  const allCoreSelected = stage.coreComponentIds.every((id) => selected.has(id));
+  const anySelected = all.some((id) => selected.has(id));
+  return allCoreSelected && anySelected;
 }

@@ -98,6 +98,23 @@ function ToolCard({
       </div>
       {open && (
         <div className="space-y-3 border-t border-navy-700 p-3">
+          {k.technologies.length > 0 && (
+            <div>
+              <p className="mb-1 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                Common tech
+              </p>
+              <div className="flex flex-wrap gap-1">
+                {k.technologies.slice(0, 4).map((t) => (
+                  <span
+                    key={t}
+                    className="rounded border border-brand-blue/30 bg-brand-blue/[0.06] px-1.5 py-0.5 text-[11px] font-medium text-brand-cyan"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
           <KnowledgeBlock title="When to use" items={k.whenToUse} />
           <KnowledgeBlock title="Tradeoffs" items={k.tradeoffs} />
           <KnowledgeBlock title="Failure modes" items={k.failureModes} />

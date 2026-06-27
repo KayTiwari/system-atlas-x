@@ -3,7 +3,7 @@
 import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
+import { ArrowLeft, ArrowRight, RotateCcw, ChevronDown } from "lucide-react";
 import { getScenario } from "@/data/learningScenarios";
 import { getReferenceArchitecture } from "@/data/referenceArchitectures";
 import { useLearnStore, useLearnHasHydrated } from "@/lib/learnStore";
@@ -13,7 +13,7 @@ import { buildLessonPlan, isStageComplete } from "@/lib/lessonPlan";
 import type { ComponentId } from "@/lib/learnTypes";
 import { TopNav } from "@/components/nav/TopNav";
 import { SelectedComponents } from "@/components/architecture/SelectedComponents";
-import { scoreColor } from "@/components/architecture/ScoreCard";
+import { scoreColor, CategoryBreakdown } from "@/components/architecture/ScoreCard";
 import { AtlasCoach } from "@/components/coach/AtlasCoach";
 import { LessonProgress, type StepMeta } from "@/components/learn/LessonProgress";
 import { ScenarioOverview } from "@/components/learn/ScenarioOverview";
@@ -142,14 +142,29 @@ export default function LearnScenarioPage({
               <h1 className="text-2xl font-semibold tracking-tight">{scenario.title}</h1>
             </div>
             <div className="flex items-center gap-3">
-              <div className="rounded-md border border-navy-700 bg-navy-900 px-3 py-1.5 text-center">
-                <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500">
-                  Interview Readiness
-                </p>
-                <p className={`text-xl font-semibold leading-none tabular-nums ${scoreColor(score.overall)}`}>
-                  {score.overall}
-                  <span className="ml-1 text-[11px] font-semibold">{score.readinessLabel}</span>
-                </p>
+              <div className="group relative">
+                <button
+                  type="button"
+                  className="flex cursor-default items-center gap-2 rounded-md border border-navy-700 bg-navy-900 px-3 py-1.5 text-left"
+                >
+                  <span>
+                    <span className="block font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+                      Interview Readiness
+                    </span>
+                    <span className={`block text-xl font-semibold leading-none tabular-nums ${scoreColor(score.overall)}`}>
+                      {score.overall}
+                      <span className="ml-1 text-[11px] font-semibold">{score.readinessLabel}</span>
+                    </span>
+                  </span>
+                  <ChevronDown className="h-3.5 w-3.5 text-slate-400 transition group-hover:rotate-180" />
+                </button>
+                <div className="invisible absolute right-0 z-30 mt-2 w-80 rounded-md border border-navy-700 bg-navy-900 p-4 opacity-0 shadow-[0_24px_60px_rgba(28,27,25,0.18)] transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                  <p className="mb-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                    Score breakdown
+                  </p>
+                  <p className="mb-3 text-xs text-slate-600">{score.summary}</p>
+                  <CategoryBreakdown score={score} />
+                </div>
               </div>
               {selectedList.length > 0 && (
                 <button

@@ -18,6 +18,35 @@ export function barColor(n: number): string {
   return "bg-emerald-500";
 }
 
+/** The per-category bars + value-colored numbers (reused in the hover popover). */
+export function CategoryBreakdown({ score }: { score: ArchitectureScore }) {
+  return (
+    <div className="grid grid-cols-1 gap-x-5 gap-y-2 sm:grid-cols-2">
+      {REVIEW_CATEGORIES.map((cat) => {
+        const v = score.categories[cat];
+        return (
+          <div key={cat} className="flex items-center gap-2">
+            <span className="w-28 shrink-0 text-[11px] text-slate-500">{cat}</span>
+            <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-paper-soft">
+              <span
+                className={`block h-full rounded-full ${barColor(v)}`}
+                style={{ width: `${v}%` }}
+              />
+            </span>
+            <span
+              className={`w-7 shrink-0 text-right text-[11px] font-semibold tabular-nums ${scoreColor(
+                v
+              )}`}
+            >
+              {v}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function ScoreCard({
   mode,
   score,
@@ -52,28 +81,8 @@ export function ScoreCard({
       <p className="mt-3 text-sm text-slate-600">{score.summary}</p>
 
       {!compact && (
-        <div className="mt-4 grid grid-cols-1 gap-x-5 gap-y-2 sm:grid-cols-2">
-          {REVIEW_CATEGORIES.map((cat) => {
-            const v = score.categories[cat];
-            return (
-              <div key={cat} className="flex items-center gap-2">
-                <span className="w-28 shrink-0 text-[11px] text-slate-500">{cat}</span>
-                <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-paper-soft">
-                  <span
-                    className={`block h-full rounded-full ${barColor(v)}`}
-                    style={{ width: `${v}%` }}
-                  />
-                </span>
-                <span
-                  className={`w-7 shrink-0 text-right text-[11px] font-semibold tabular-nums ${scoreColor(
-                    v
-                  )}`}
-                >
-                  {v}
-                </span>
-              </div>
-            );
-          })}
+        <div className="mt-4">
+          <CategoryBreakdown score={score} />
         </div>
       )}
     </div>

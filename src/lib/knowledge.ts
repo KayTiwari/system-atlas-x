@@ -13,6 +13,8 @@ import { CATALOG, type CatalogEntry } from "./catalog";
  */
 export type ComponentKnowledge = {
   type: ArchitectureNodeType;
+  /** Real-world technologies that implement this component. */
+  technologies: string[];
   alternatives: string[];
   failureModes: string[];
   interviewTalkingPoints: string[];
@@ -21,7 +23,60 @@ export type ComponentKnowledge = {
   tags: string[];
 };
 
-const KNOWLEDGE: Partial<Record<ArchitectureNodeType, Omit<ComponentKnowledge, "type">>> = {
+/**
+ * Concrete technologies that implement each component, so the library reads as
+ * "Cache (Redis, Memcached)" rather than an abstract box. Keyed by the same
+ * type id; falls back to the catalog's defaultTechnology when absent.
+ */
+const TECHNOLOGIES: Partial<Record<ArchitectureNodeType, string[]>> = {
+  web_app: ["Next.js", "React", "Vue", "SvelteKit"],
+  mobile_app: ["React Native", "Flutter", "Swift (iOS)", "Kotlin (Android)"],
+  static_site: ["Astro", "Next.js (SSG)", "Hugo", "Eleventy"],
+  bff: ["Node.js", "GraphQL (Apollo)", "tRPC"],
+  api_gateway: ["Kong", "AWS API Gateway", "Apigee", "NGINX"],
+  api_service: ["Node.js", "Go", "Java / Spring", "Python / FastAPI"],
+  rate_limiter: ["Redis", "Envoy", "Kong", "NGINX"],
+  auth_provider: ["Auth0", "Clerk", "AWS Cognito", "Keycloak"],
+  authorization: ["OPA", "Oso", "Postgres RLS", "Casbin"],
+  sql_database: ["Postgres", "MySQL", "CockroachDB", "SQL Server"],
+  nosql_database: ["DynamoDB", "MongoDB", "Cassandra", "Firestore"],
+  object_storage: ["Amazon S3", "Google Cloud Storage", "Azure Blob", "Cloudflare R2"],
+  cache: ["Redis", "Memcached", "Valkey"],
+  queue: ["Amazon SQS", "RabbitMQ", "Kafka", "Google Pub/Sub"],
+  dead_letter_queue: ["SQS DLQ", "RabbitMQ DLX", "Kafka DLT"],
+  worker: ["Sidekiq", "Celery", "BullMQ", "Temporal"],
+  cdn: ["Cloudflare", "CloudFront", "Fastly", "Akamai"],
+  audit_log: ["Append-only Postgres", "AWS CloudTrail", "immudb"],
+  backup: ["AWS Backup", "pgBackRest", "Velero"],
+  read_replica: ["Postgres read replica", "RDS replicas", "Vitess"],
+  search: ["Elasticsearch", "OpenSearch", "Algolia", "Postgres FTS", "Typesense"],
+  vector_database: ["pgvector", "Pinecone", "Qdrant", "Weaviate"],
+  external_api: ["Stripe", "Twilio", "OpenAI", "Salesforce"],
+  monitoring: ["Datadog", "Prometheus + Grafana", "Honeycomb", "OpenTelemetry"],
+  ci_cd: ["GitHub Actions", "GitLab CI", "CircleCI", "Jenkins"],
+  hosting: ["Vercel", "AWS ECS / Fargate", "Kubernetes", "Fly.io"],
+  cloud_platform: ["AWS", "Google Cloud", "Azure", "Cloudflare"],
+  load_balancer: ["AWS ALB", "NGINX", "HAProxy", "Envoy"],
+  event_bus: ["Kafka", "AWS SNS / EventBridge", "Google Pub/Sub", "NATS"],
+  payment_provider: ["Stripe", "Adyen", "Braintree", "PayPal"],
+  notification_provider: ["Amazon SES", "Twilio", "SendGrid", "Firebase FCM"],
+  idempotency_layer: ["Redis", "Unique DB constraint", "Stripe idempotency keys"],
+  webhook_handler: ["Svix", "Hookdeck", "Custom endpoint"],
+  analytics_pipeline: ["Segment", "Kafka + Flink", "Snowplow", "Kinesis"],
+  data_warehouse: ["Snowflake", "BigQuery", "Redshift", "ClickHouse"],
+  secrets_manager: ["AWS Secrets Manager", "HashiCorp Vault", "Doppler"],
+  feature_flag: ["LaunchDarkly", "Unleash", "Flagsmith", "Statsig"],
+  admin_dashboard: ["Retool", "Custom React", "Forest Admin"],
+  scheduler: ["cron", "Temporal", "EventBridge Scheduler", "Quartz"],
+  malware_scanner: ["ClamAV", "VirusTotal", "AWS GuardDuty"],
+  api_contract: ["OpenAPI / Swagger", "GraphQL", "Protobuf / gRPC"],
+  config_service: ["AWS AppConfig", "Consul", "etcd"],
+  recommendation_service: ["AWS Personalize", "Custom ML", "TensorFlow"],
+};
+
+const KNOWLEDGE: Partial<
+  Record<ArchitectureNodeType, Omit<ComponentKnowledge, "type" | "technologies">>
+> = {
   api_gateway: {
     alternatives: ["Direct service exposure", "Load balancer only", "BFF per client"],
     failureModes: [
@@ -448,6 +503,8 @@ export function getComponentKnowledge(
   return {
     ...entry,
     type,
+    technologies:
+      TECHNOLOGIES[type] ?? (entry.defaultTechnology ? [entry.defaultTechnology] : []),
     alternatives: deep?.alternatives ?? [],
     failureModes: deep?.failureModes ?? [],
     interviewTalkingPoints: deep?.interviewTalkingPoints ?? [],

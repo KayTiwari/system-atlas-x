@@ -146,6 +146,24 @@ export default function ComponentLibraryPage() {
               </div>
               <p className="text-sm leading-relaxed text-slate-700">{active.purpose}</p>
 
+              {active.technologies.length > 0 && (
+                <div>
+                  <p className="mb-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                    Technologies
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {active.technologies.map((t) => (
+                      <span
+                        key={t}
+                        className="rounded-md border border-brand-blue/30 bg-brand-blue/[0.06] px-2 py-1 text-xs font-medium text-brand-cyan"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <DetailSection title="When to use" items={active.whenToUse} />
               <DetailSection title="Alternatives" items={active.alternatives} />
               <DetailSection title="Tradeoffs" items={active.tradeoffs} />

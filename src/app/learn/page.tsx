@@ -17,6 +17,17 @@ const DIFFICULTY_CLASS: Record<Difficulty, string> = {
   Advanced: "bg-red-500/15 text-red-600",
 };
 
+const DIFFICULTY_ORDER: Record<Difficulty, number> = {
+  Beginner: 0,
+  Intermediate: 1,
+  Advanced: 2,
+};
+
+/** Show scenarios easiest first: Beginner -> Intermediate -> Advanced. */
+const SORTED_SCENARIOS = [...LEARNING_SCENARIOS].sort(
+  (a, b) => DIFFICULTY_ORDER[a.difficulty] - DIFFICULTY_ORDER[b.difficulty]
+);
+
 export default function LearnHomePage() {
   return (
     <main className="min-h-screen bg-gradient-dark">
@@ -49,7 +60,7 @@ export default function LearnHomePage() {
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {LEARNING_SCENARIOS.map((s) => (
+            {SORTED_SCENARIOS.map((s) => (
               <Link
                 key={s.id}
                 href={`/learn/${s.id}`}
